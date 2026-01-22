@@ -41,20 +41,19 @@ export class StudentsService {
   private nextMockId = 1;
 
   constructor(private http: HttpClient) {
+    // Limpar localStorage para garantir que usa o backend
+    localStorage.removeItem('mock_mode_enabled');
+    localStorage.removeItem('mock_students_list');
+    
     this.loadMockDataFromStorage();
     // Ativar mock automaticamente se houver dados no localStorage
     this.checkAndEnableMockMode();
   }
 
   private checkAndEnableMockMode(): void {
-    const mockModeEnabled = localStorage.getItem('mock_mode_enabled');
-    if (mockModeEnabled === 'true') {
-      this.useMock = true;
-      console.log('✓ Modo Mock ativado pelo usuário');
-    } else {
-      this.useMock = false;
-      console.log('✓ Modo Real (Backend) ativado por padrão');
-    }
+    // Sempre forçar modo real (backend)
+    this.useMock = false;
+    console.log('✓ Modo Real (Backend) ativado por padrão');
   }
 
   private loadMockDataFromStorage(): void {
@@ -125,9 +124,10 @@ export class StudentsService {
     search?: string,
     searchType: string = 'name'
   ): Observable<ApiResponse<StudentPagedOutputDTO>> {
-    if (this.useMock) {
-      return this.getMockStudents(page, size, search, searchType);
-    }
+    // SEMPRE usar backend - mock desabilitado
+    // if (this.useMock) {
+    //   return this.getMockStudents(page, size, search, searchType);
+    // }
 
     let params = new HttpParams()
       .set('page', page.toString())
@@ -192,9 +192,10 @@ export class StudentsService {
   }
 
   getStudentDetail(id: string): Observable<ApiResponse<StudentOutputDTO>> {
-    if (this.useMock) {
-      return this.getMockStudentDetail(id);
-    }
+    // SEMPRE usar backend - mock desabilitado
+    // if (this.useMock) {
+    //   return this.getMockStudentDetail(id);
+    // }
 
     return this.http.get<ApiResponse<StudentOutputDTO>>(`${this.apiUrl}/${id}`)
       .pipe(catchError(err => {
@@ -227,9 +228,10 @@ export class StudentsService {
   }
 
   createStudent(student: any): Observable<ApiResponse<StudentOutputDTO>> {
-    if (this.useMock) {
-      return this.createMockStudent(student);
-    }
+    // SEMPRE usar backend - mock desabilitado
+    // if (this.useMock) {
+    //   return this.createMockStudent(student);
+    // }
 
     return this.http.post<ApiResponse<StudentOutputDTO>>(this.apiUrl, student)
       .pipe(catchError(err => {
@@ -283,9 +285,10 @@ export class StudentsService {
   }
 
   updateStudent(id: string, student: any): Observable<ApiResponse<StudentOutputDTO>> {
-    if (this.useMock) {
-      return this.updateMockStudent(id, student);
-    }
+    // SEMPRE usar backend - mock desabilitado
+    // if (this.useMock) {
+    //   return this.updateMockStudent(id, student);
+    // }
 
     return this.http.put<ApiResponse<StudentOutputDTO>>(`${this.apiUrl}/${id}`, student)
       .pipe(catchError(err => {
@@ -321,9 +324,10 @@ export class StudentsService {
   }
 
   deleteStudent(id: string): Observable<ApiResponse<void>> {
-    if (this.useMock) {
-      return this.deleteMockStudent(id);
-    }
+    // SEMPRE usar backend - mock desabilitado
+    // if (this.useMock) {
+    //   return this.deleteMockStudent(id);
+    // }
 
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`)
       .pipe(catchError(err => {

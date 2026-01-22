@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { StudentsService, StudentOutputDTO } from '../../services/students.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -14,10 +15,12 @@ export class StudentDetailsComponent implements OnInit {
   student: StudentOutputDTO | null = null;
   loading = true;
   errorMessage = '';
+  photoUrl: SafeUrl | null = null;
 
   constructor(
     private studentsService: StudentsService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -31,23 +34,41 @@ export class StudentDetailsComponent implements OnInit {
     this.errorMessage = '';
 
     console.log('📋 Carregando detalhes do aluno ID:', this.studentId);
-    console.log('📋 Modo Mock:', this.studentsService.isMockEnabled());
 
     this.studentsService.getStudentDetail(this.studentId!).subscribe(
       (response: any) => {
         this.loading = false;
         console.log('✅ Detalhes do aluno carregados:', response);
         this.student = response.data || response;
-        console.log('📸 Foto do aluno:', this.student && this.student.photo);
+        console.log('📸 Foto do aluno (raw):', this.student && this.student.photo ? this.student.photo.substring(0, 50) + '...' : 'nenhuma');
+        
+        // Processar foto se existir
+        if (this.student && this.student.photo) {
+          this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(this.getFormattedPhotoUrl(this.student.photo));
+        }
       },
       (error) => {
         this.loading = false;
         console.error('❌ Erro ao carregar detalhes:', error);
-        console.error('📌 Status do erro:', error.status || 'Sem status');
-        console.error('📌 Mensagem do erro:', error.message || 'Sem mensagem');
-        this.toastService.error(error.message || 'Erro ao carregar detalhes do aluno. Tente novamente.');
+        this.toastService.error(error.message || 'Erro ao carregar detalhes do aluno.');
       }
     );
+  }
+
+  getFormattedPhotoUrl(photo: string): string {
+    if (!photo) return this.getDefaultAvatar();
+    
+    // Se já está em formato data URL, retornar como está
+    if (photo.startsWith('data:')) {
+      return photo;
+    }
+    
+    // Se é uma string Base64 pura, adicionar prefixo
+    if (!photo.includes('://')) {
+      return `data:image/jpeg;base64,${photo}`;
+    }
+    
+    return photo;
   }
 
   onCancel(): void {

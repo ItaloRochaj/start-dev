@@ -18,7 +18,7 @@
     <!-- Foto -->
     <div class="photo-section">
       <img
-        [src]="student.photo || getDefaultAvatar()"
+        [src]="photoUrl || getDefaultAvatar()"
         alt="Foto de {{ student.name }}"
         class="student-photo"
         (error)="onPhotoError($event)"

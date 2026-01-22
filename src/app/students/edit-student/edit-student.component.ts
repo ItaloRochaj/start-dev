@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { StudentsService, StudentOutputDTO } from '../../services/students.service';
 
 @Component({
@@ -18,14 +19,15 @@ export class EditStudentComponent implements OnInit, OnChanges {
   submitting = false;
   errorMessage = '';
   successMessage = '';
-  photoPreview: string | null = null;
+  photoPreview: string | SafeUrl | null = null;
   selectedFile: File | null = null;
   hasChanges = false;
   originalData: any = null;
 
   constructor(
     private fb: FormBuilder,
-    private studentsService: StudentsService
+    private studentsService: StudentsService,
+    private sanitizer: DomSanitizer
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -69,9 +71,9 @@ export class EditStudentComponent implements OnInit, OnChanges {
             status: 'Ativo' // Default: sempre Ativo
           });
 
-          // Se houver foto, usar como preview
+          // Se houver foto, processar e usar como preview
           if (this.student.photo) {
-            this.photoPreview = this.student.photo;
+            this.photoPreview = this.sanitizer.bypassSecurityTrustUrl(this.getFormattedPhotoUrl(this.student.photo));
           }
 
           // Salvar dados originais para comparação
@@ -94,6 +96,22 @@ export class EditStudentComponent implements OnInit, OnChanges {
         this.errorMessage = 'Erro ao carregar dados do aluno. Tente novamente.';
       }
     );
+  }
+
+  getFormattedPhotoUrl(photo: string): string {
+    if (!photo) return this.getDefaultAvatar();
+    
+    // Se já está em formato data URL, retornar como está
+    if (photo.startsWith('data:')) {
+      return photo;
+    }
+    
+    // Se é uma string Base64 pura, adicionar prefixo
+    if (!photo.includes('://')) {
+      return `data:image/jpeg;base64,${photo}`;
+    }
+    
+    return photo;
   }
 
   /**

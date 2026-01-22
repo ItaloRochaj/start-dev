@@ -11,7 +11,7 @@ import { StudentsService } from './services/students.service';
 export class AppComponent {
   title = 'start-dev';
   isAuthenticated = false;
-  isMockMode = false;
+  isMockMode = false; // Mock desabilitado - usando backend real em localhost:8080
   showDevTools = false;
 
   constructor(
@@ -20,24 +20,29 @@ export class AppComponent {
     public studentsService: StudentsService
   ) {
     this.isAuthenticated = this.authService.isAuthenticated();
-    this.isMockMode = this.studentsService.isMockEnabled();
+    // Desabilitar mock mode e forçar uso do backend
+    this.isMockMode = false;
+    this.studentsService.setMockMode(false);
   }
 
   toggleMockMode(): void {
-    this.isMockMode = !this.isMockMode;
-    this.studentsService.setMockMode(this.isMockMode);
+    // DESABILITADO - Mock mode removido da UI
+    // this.isMockMode = !this.isMockMode;
+    // this.studentsService.setMockMode(this.isMockMode);
   }
 
   seedTestData(): void {
-    this.studentsService.seedMockTestData();
-    alert('Dados de teste adicionados! (Mock Mode)');
+    // DESABILITADO - Mock mode removido da UI
+    // this.studentsService.seedMockTestData();
+    // alert('Dados de teste adicionados! (Mock Mode)');
   }
 
   clearMockData(): void {
-    if (confirm('Tem certeza que deseja limpar todos os dados mock?')) {
-      this.studentsService.clearMockData();
-      alert('Dados mock limpos!');
-    }
+    // DESABILITADO - Mock mode removido da UI
+    // if (confirm('Tem certeza que deseja limpar todos os dados mock?')) {
+    //   this.studentsService.clearMockData();
+    //   alert('Dados mock limpos!');
+    // }
   }
 
   logout(): void {
