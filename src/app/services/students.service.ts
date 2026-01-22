@@ -44,7 +44,7 @@ export class StudentsService {
     // Limpar localStorage para garantir que usa o backend
     localStorage.removeItem('mock_mode_enabled');
     localStorage.removeItem('mock_students_list');
-    
+
     this.loadMockDataFromStorage();
     // Ativar mock automaticamente se houver dados no localStorage
     this.checkAndEnableMockMode();

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { StudentsService, StudentOutputDTO } from '../../services/students.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -15,7 +15,7 @@ export class StudentDetailsComponent implements OnInit {
   student: StudentOutputDTO | null = null;
   loading = true;
   errorMessage = '';
-  photoUrl: SafeUrl | null = null;
+  photoUrl: string | null = null;
 
   constructor(
     private studentsService: StudentsService,
@@ -41,10 +41,10 @@ export class StudentDetailsComponent implements OnInit {
         console.log('✅ Detalhes do aluno carregados:', response);
         this.student = response.data || response;
         console.log('📸 Foto do aluno (raw):', this.student && this.student.photo ? this.student.photo.substring(0, 50) + '...' : 'nenhuma');
-        
+
         // Processar foto se existir
         if (this.student && this.student.photo) {
-          this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(this.getFormattedPhotoUrl(this.student.photo));
+          this.photoUrl = this.getFormattedPhotoUrl(this.student.photo);
         }
       },
       (error) => {
@@ -57,17 +57,17 @@ export class StudentDetailsComponent implements OnInit {
 
   getFormattedPhotoUrl(photo: string): string {
     if (!photo) return this.getDefaultAvatar();
-    
+
     // Se já está em formato data URL, retornar como está
     if (photo.startsWith('data:')) {
       return photo;
     }
-    
+
     // Se é uma string Base64 pura, adicionar prefixo
     if (!photo.includes('://')) {
       return `data:image/jpeg;base64,${photo}`;
     }
-    
+
     return photo;
   }
 
