@@ -7,13 +7,17 @@ import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { StudentsComponent } from './students/students.component';
+import { NewStudentComponent } from './students/new-student/new-student.component';
+import { StudentDetailsComponent } from './students/student-details/student-details.component';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    StudentsComponent
+    StudentsComponent,
+    NewStudentComponent,
+    StudentDetailsComponent
   ],
   imports: [
     BrowserModule,
