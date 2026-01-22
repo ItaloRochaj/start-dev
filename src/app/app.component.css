@@ -1,0 +1,122 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Dev Tools Styles */
+.dev-tools {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0;
+  margin: 0;
+  border-bottom: 2px solid #5568d3;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.dev-tools-header {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dev-tools-header:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 8px;
+  transition: transform 0.2s;
+}
+
+.dev-tools-content {
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-test,
+.btn-clear,
+.btn-toggle {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.btn-test:hover {
+  background-color: #4CAF50;
+  transform: translateY(-2px);
+}
+
+.btn-clear:hover {
+  background-color: #f44336;
+  transform: translateY(-2px);
+}
+
+.btn-toggle:hover {
+  background-color: #FF9800;
+  transform: translateY(-2px);
+}
+
+/* Status Bar */
+.status-bar {
+  background-color: #e8f5e9;
+  border-bottom: 1px solid #4CAF50;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #2e7d32;
+}
+
+.status-text {
+  font-weight: 500;
+}
+
+.btn-mock-mode {
+  padding: 4px 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-mock-mode:hover {
+  background-color: #388E3C;
+}

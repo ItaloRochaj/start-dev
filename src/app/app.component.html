@@ -1,1 +1,24 @@
-<router-outlet></router-outlet>
+<div class="app-container">
+  <!-- Dev Tools (visible quando em mock mode) -->
+  <div *ngIf="isMockMode" class="dev-tools">
+    <div class="dev-tools-header">
+      🛠️ MODO TESTE - Dados Locais
+      <button (click)="showDevTools = !showDevTools" class="toggle-btn">
+        {{ showDevTools ? '▼' : '▶' }}
+      </button>
+    </div>
+    <div *ngIf="showDevTools" class="dev-tools-content">
+      <button (click)="seedTestData()" class="btn-test">➕ Adicionar Dados de Teste</button>
+      <button (click)="clearMockData()" class="btn-clear">🗑️ Limpar Dados</button>
+      <button (click)="toggleMockMode()" class="btn-toggle">🔌 Conectar ao Backend</button>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div *ngIf="!isMockMode" class="status-bar">
+    <span class="status-text">🟢 Modo Real - Backend em localhost:8080</span>
+    <button (click)="toggleMockMode()" class="btn-mock-mode">Usar Modo Teste</button>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
