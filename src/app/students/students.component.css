@@ -26,7 +26,7 @@
 }
 
 .btn-new-student {
-  background-color: #c97c5c;
+  background-color: #dc3545;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -38,16 +38,16 @@
 }
 
 .btn-new-student:hover {
-  background-color: #b86a4d;
+  background-color: #c82333;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Search Section */
 .search-section {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   background-color: white;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -55,7 +55,8 @@
 .search-form {
   display: flex;
   gap: 10px;
-  align-items: center;
+  align-items: stretch;
+  margin-top: 12px;
 }
 
 .search-input {
@@ -69,13 +70,13 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #c97c5c;
+  border-color: rgb(96, 129, 221);
   box-shadow: 0 0 0 3px rgba(201, 124, 92, 0.1);
 }
 
 .btn-search {
   padding: 12px 24px;
-  background-color: #0056b3;
+  background-color: rgb(96, 129, 221);
   color: white;
   border: none;
   border-radius: 6px;
@@ -83,27 +84,33 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  height: 48px;
 }
 
 .btn-search:hover {
-  background-color: #004085;
+  background-color: #0052cc;
   transform: translateY(-2px);
 }
 
 .btn-clear {
   padding: 12px 24px;
-  background-color: #6c757d;
-  color: white;
+  background-color: #e9ecef;
+  color: #495057;
   border: none;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  height: 48px;
 }
 
 .btn-clear:hover {
-  background-color: #5a6268;
+  background-color: #dee2e6;
   transform: translateY(-2px);
 }
 
@@ -173,8 +180,8 @@
 }
 
 .status-badge.status-inactive {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: #e9ecef;
+  color: #495057;
 }
 
 /* Ações */
@@ -188,43 +195,52 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 2px solid #ddd;
-  border-radius: 6px;
+  width: 50px;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
   background-color: white;
   cursor: pointer;
-  font-size: 18px;
   transition: all 0.3s ease;
   position: relative;
+  padding: 0;
+}
+
+.action-btn .icon {
+  width: 22px;
+  height: 22px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: #ffffff;
 }
 
 .action-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+.view-btn {
+  background-color: #2c3e50;
+}
+
 .view-btn:hover {
-  border-color: #0056b3;
-  background-color: #e7f3ff;
+  background-color: #1a252f;
 }
 
 .edit-btn {
-  border-color: #0056b3;
+  background-color: rgb(96, 129, 221);
 }
 
 .edit-btn:hover {
-  border-color: #0056b3;
-  background-color: #e7f3ff;
+  background-color: #0052cc;
 }
 
 .delete-btn {
-  border-color: #dc3545;
+  background-color: #dc3545;
 }
 
 .delete-btn:hover {
-  border-color: #dc3545;
-  background-color: #ffe7e7;
+  background-color: #c82333;
 }
 
 /* Pagination */
@@ -455,10 +471,10 @@
 }
 
 .modal-close {
-  background: none;
+  background-color: #e9ecef;
   border: none;
   font-size: 24px;
-  color: #999;
+  color: #495057;
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -471,8 +487,9 @@
 }
 
 .modal-close:hover {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: #dee2e6;
+  color: white;
+
 }
 
 /* Responsive Modal */
@@ -499,4 +516,12 @@
     height: 28px;
     font-size: 20px;
   }
+}
+
+/* Modal de Confirmação - Tamanho Reduzido */
+.modal-content-small {
+  width: auto !important;
+  max-width: 450px !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
 }

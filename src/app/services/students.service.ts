@@ -10,6 +10,7 @@ export interface StudentOutputDTO {
   email: string;
   phone: string;
   photo?: string;
+  status?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -98,7 +99,6 @@ export class StudentsService {
         cpf: '12345678901',
         email: 'joao@example.com',
         phone: '11999999999',
-        photo: 'assets/default-avatar.svg',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       },
@@ -108,7 +108,6 @@ export class StudentsService {
         cpf: '98765432100',
         email: 'maria@example.com',
         phone: '21999999999',
-        photo: 'assets/default-avatar.svg',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       }
@@ -266,7 +265,6 @@ export class StudentsService {
       cpf: student.cpf,
       email: student.email,
       phone: student.phone,
-      photo: student.photo || 'assets/default-avatar.svg',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
