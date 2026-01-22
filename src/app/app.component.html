@@ -19,8 +19,8 @@
 
   <!-- Status Bar -->
   <div *ngIf="!isMockMode" class="status-bar">
-    <span class="status-text">🟢 Modo Real - Backend em localhost:8080</span>
-    <button (click)="toggleMockMode()" class="btn-mock-mode">Usar Modo Teste</button>
+    <span class="status-text">🟢 Modo Real - Backend em localhost:8080 (Autenticação Obrigatória)</span>
+    <button (click)="toggleMockMode()" class="btn-mock-mode">📝 Usar Modo Teste</button>
   </div>
 
   <router-outlet></router-outlet>

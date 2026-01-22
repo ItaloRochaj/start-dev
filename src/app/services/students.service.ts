@@ -47,11 +47,13 @@ export class StudentsService {
   }
 
   private checkAndEnableMockMode(): void {
-    const hasMockData = localStorage.getItem('mock_students_list');
     const mockModeEnabled = localStorage.getItem('mock_mode_enabled');
-    if (hasMockData || mockModeEnabled === 'true') {
+    if (mockModeEnabled === 'true') {
       this.useMock = true;
-      console.log('✓ Modo Mock automaticamente ativado (dados encontrados no localStorage)');
+      console.log('✓ Modo Mock ativado pelo usuário');
+    } else {
+      this.useMock = false;
+      console.log('✓ Modo Real (Backend) ativado por padrão');
     }
   }
 
