@@ -1,0 +1,117 @@
+<div class="container">
+  <div class="header">
+    <h1>Start Devs</h1>
+    <button class="btn-new-student" (click)="newStudent()">Novo Aluno</button>
+  </div>
+
+  <div class="search-section">
+    <form [formGroup]="searchForm" class="search-form">
+      <input
+        type="text"
+        placeholder="Buscar por nome ou matrícula..."
+        formControlName="search"
+        class="search-input"
+      >
+      <button type="button" class="btn-search" (click)="onSearch()">Buscar</button>
+      <button type="button" class="btn-clear" (click)="clearSearch()">Limpar</button>
+    </form>
+  </div>
+
+  <div class="table-wrapper" *ngIf="!loading">
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th>Matrícula</th>
+          <th>Nome</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students" [ngClass]="'status-' + getStatusClass(student.id)">
+          <td>{{ student.cpf }}</td>
+          <td>{{ student.name }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="'status-' + getStatusClass(student.id)">
+              Ativo
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button
+              class="action-btn view-btn"
+              (click)="viewStudent(student.id)"
+              title="Ver detalhes"
+            >
+              <i class="icon-eye">👁️</i>
+            </button>
+            <button
+              class="action-btn edit-btn"
+              (click)="editStudent(student.id)"
+              title="Editar"
+            >
+              <i class="icon-edit">✏️</i>
+            </button>
+            <button
+              class="action-btn delete-btn"
+              (click)="deleteStudent(student.id)"
+              title="Excluir"
+            >
+              <i class="icon-delete">🗑️</i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button
+        class="pagination-btn"
+        (click)="goToFirstPage()"
+        [disabled]="currentPage === 0"
+      >
+        &lt;&lt;
+      </button>
+      <button
+        class="pagination-btn"
+        (click)="goToPreviousPage()"
+        [disabled]="currentPage === 0"
+      >
+        &lt;
+      </button>
+
+      <button
+        *ngFor="let page of getPageNumbers()"
+        class="pagination-btn"
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)"
+      >
+        {{ page + 1 }}
+      </button>
+
+      <button
+        class="pagination-btn"
+        (click)="goToNextPage()"
+        [disabled]="currentPage === totalPages - 1"
+      >
+        &gt;
+      </button>
+      <button
+        class="pagination-btn"
+        (click)="goToLastPage()"
+        [disabled]="currentPage === totalPages - 1"
+      >
+        &gt;&gt;
+      </button>
+    </div>
+
+    <div class="info-bar">
+      <span class="total-records">Total de registros: {{ totalElements }}</span>
+      <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+  </div>
+</div>
