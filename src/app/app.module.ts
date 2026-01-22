@@ -9,6 +9,10 @@ import { LoginComponent } from './login/login.component';
 import { StudentsComponent } from './students/students.component';
 import { NewStudentComponent } from './students/new-student/new-student.component';
 import { StudentDetailsComponent } from './students/student-details/student-details.component';
+import { EditStudentComponent } from './students/edit-student/edit-student.component';
+import { DeleteConfirmationComponent } from './students/delete-confirmation/delete-confirmation.component';
+import { ToastComponent } from './components/toast/toast.component';
+import { ToastService } from './services/toast.service';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
@@ -17,7 +21,10 @@ import { AppRoutingModule } from './app-routing.module';
     LoginComponent,
     StudentsComponent,
     NewStudentComponent,
-    StudentDetailsComponent
+    StudentDetailsComponent,
+    EditStudentComponent,
+    DeleteConfirmationComponent,
+    ToastComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +34,7 @@ import { AppRoutingModule } from './app-routing.module';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [ToastService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
