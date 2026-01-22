@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
 
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
       usuario: ['', [Validators.required, this.usuarioValidator.bind(this)]],
@@ -78,8 +80,8 @@ export class LoginComponent implements OnInit {
       const usuarioControl = this.loginForm.get('usuario');
       const senhaControl = this.loginForm.get('senha');
       const credentials = {
-        usuario: usuarioControl ? usuarioControl.value : '',
-        senha: senhaControl ? senhaControl.value : ''
+        username: usuarioControl ? usuarioControl.value : '',
+        password: senhaControl ? senhaControl.value : ''
       };
 
       this.authService.login(credentials).subscribe(
@@ -88,14 +90,14 @@ export class LoginComponent implements OnInit {
           console.log('Login successful:', response);
 
           // Armazenar token se fornecido
-          if (response.token) {
-            this.authService.setToken(response.token);
+          if (response.data && response.data.token) {
+            this.authService.setToken(response.data.token);
           }
 
           this.toastService.success('Login realizado com sucesso!');
 
-          // TODO: Redirecionar para dashboard ou home
-          // this.router.navigate(['/dashboard']);
+          // Redirecionar para página de estudantes
+          this.router.navigate(['/students']);
         },
         (error) => {
           this.isLoading = false;

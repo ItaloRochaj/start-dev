@@ -41,19 +41,8 @@ export class AppComponent {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.authService.removeToken();
-        this.isAuthenticated = false;
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-        console.error('Erro ao fazer logout:', error);
-        // Mesmo com erro, fazer logout local
-        this.authService.removeToken();
-        this.isAuthenticated = false;
-        this.router.navigate(['/login']);
-      }
-    });
+    this.authService.logout();
+    this.isAuthenticated = false;
+    this.router.navigate(['/login']);
   }
 }

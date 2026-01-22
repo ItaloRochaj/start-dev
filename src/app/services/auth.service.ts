@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface LoginRequest {
-  usuario: string;
-  senha: string;
+  username: string;
+  password: string;
 }
 
 export interface LoginResponse {
   token?: string;
-  usuario?: string;
+  username?: string;
+  tokenType?: string;
   message?: string;
 }
 
@@ -17,16 +18,16 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth'; // TODO: Ajustar URL do backend
+  private apiUrl = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+  login(credentials: LoginRequest): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials);
   }
 
-  logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {});
+  logout(): void {
+    this.removeToken();
   }
 
   isAuthenticated(): boolean {

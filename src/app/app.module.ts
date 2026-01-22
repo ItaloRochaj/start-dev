@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
@@ -14,6 +14,7 @@ import { DeleteConfirmationComponent } from './students/delete-confirmation/dele
 import { ToastComponent } from './components/toast/toast.component';
 import { ToastService } from './services/toast.service';
 import { AppRoutingModule } from './app-routing.module';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,14 @@ import { AppRoutingModule } from './app-routing.module';
     FormsModule,
     HttpClientModule
   ],
-  providers: [ToastService],
+  providers: [
+    ToastService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

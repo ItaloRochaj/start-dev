@@ -95,6 +95,10 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -103,6 +107,17 @@ body {
   line-height: var(--line-height-normal);
   color: var(--dark-color);
   background-color: var(--light-color);
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Root app container */
+app-root {
+  display: block;
+  height: 100%;
+  width: 100%;
 }
 
 /* Typography */
