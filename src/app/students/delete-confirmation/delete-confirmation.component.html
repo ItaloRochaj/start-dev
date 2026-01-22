@@ -1,0 +1,31 @@
+<div class="confirmation-container">
+  <!-- Header -->
+  <div class="confirmation-header">
+    <h2>Confirmar Exclusão</h2>
+  </div>
+
+  <!-- Mensagem -->
+  <div class="confirmation-message">
+    <p>Deseja realmente excluir o aluno <strong>{{ studentName }}</strong>?</p>
+  </div>
+
+  <!-- Botões de Ação -->
+  <div class="confirmation-actions">
+    <button
+      class="btn btn-cancel"
+      (click)="onCancel()"
+      [disabled]="loading"
+      title="Cancelar exclusão"
+    >
+      Cancelar
+    </button>
+    <button
+      class="btn btn-delete"
+      (click)="onDelete()"
+      [disabled]="loading"
+      title="Confirmar exclusão"
+    >
+      Excluir
+    </button>
+  </div>
+</div>
