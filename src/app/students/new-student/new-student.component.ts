@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { StudentsService } from '../../services/students.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-new-student',
@@ -20,7 +20,7 @@ export class NewStudentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private studentsService: StudentsService,
-    private router: Router
+    private toastService: ToastService
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -64,6 +64,20 @@ export class NewStudentComponent implements OnInit {
   }
 
   /**
+   * Retorna a URL do avatar padrão
+   */
+  getDefaultAvatar(): string {
+    return 'https://via.placeholder.com/160?text=Foto';
+  }
+
+  /**
+   * Handler para erro ao carregar a foto
+   */
+  onPhotoError(event: any): void {
+    event.target.src = this.getDefaultAvatar();
+  }
+
+  /**
    * Formata CPF enquanto digita
    */
   formatCPF(event: any): void {
@@ -104,7 +118,7 @@ export class NewStudentComponent implements OnInit {
    */
   onSubmit(): void {
     if (this.form.invalid) {
-      this.errorMessage = 'Por favor, preencha todos os campos corretamente';
+      this.toastService.error('Por favor, preencha todos os campos corretamente');
       return;
     }
 
@@ -130,7 +144,7 @@ export class NewStudentComponent implements OnInit {
       (response: any) => {
         this.loading = false;
         console.log('Sucesso:', response);
-        alert('Aluno cadastrado com sucesso!');
+        this.toastService.success('Aluno cadastrado com sucesso!');
         this.closeModal.emit();
       },
       (error: any) => {
@@ -149,7 +163,7 @@ export class NewStudentComponent implements OnInit {
           errorMsg = error.error.error;
         }
 
-        this.errorMessage = errorMsg;
+        this.toastService.error(errorMsg);
         console.error('Mensagem de erro tratada:', errorMsg);
       }
     );
