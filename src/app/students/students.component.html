@@ -114,4 +114,24 @@
     <div class="spinner"></div>
     <p>Carregando...</p>
   </div>
+
+  <!-- Modal Novo Aluno -->
+  <div class="modal-overlay" *ngIf="showNewStudentModal" (click)="closeNewStudentModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <button class="modal-close" (click)="closeNewStudentModal()">✕</button>
+      </div>
+      <app-new-student (closeModal)="closeNewStudentModal()"></app-new-student>
+    </div>
+  </div>
+
+  <!-- Modal Detalhes do Aluno -->
+  <div class="modal-overlay" *ngIf="showStudentDetailsModal" (click)="closeStudentDetailsModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <app-student-details
+        [studentId]="selectedStudentId"
+        (closeModal)="closeStudentDetailsModal()">
+      </app-student-details>
+    </div>
+  </div>
 </div>

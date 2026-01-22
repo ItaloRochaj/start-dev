@@ -1,0 +1,115 @@
+<div class="details-container">
+  <div class="details-header">
+    <button class="back-btn" (click)="onCancel()" title="Voltar">
+      ← Detalhes do Aluno
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Carregando detalhes...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !loading" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="student && !loading" class="details-content">
+    <!-- Foto -->
+    <div class="photo-section">
+      <img
+        [src]="student.photo || getDefaultAvatar()"
+        alt="Foto de {{ student.name }}"
+        class="student-photo"
+        (error)="onPhotoError($event)"
+      >
+    </div>
+
+    <!-- Informações -->
+    <div class="info-section">
+      <!-- Nome Completo -->
+      <div class="form-group">
+        <label for="fullName" class="label">
+          <span class="icon">👤</span> Nome Completo
+        </label>
+        <input
+          id="fullName"
+          type="text"
+          [value]="student.name"
+          disabled
+          class="input-field"
+        >
+      </div>
+
+      <!-- CPF -->
+      <div class="form-group">
+        <label for="cpf" class="label">
+          <span class="icon">📋</span> CPF
+        </label>
+        <input
+          id="cpf"
+          type="text"
+          [value]="student.cpf"
+          disabled
+          class="input-field"
+        >
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email" class="label">
+          <span class="icon">📧</span> Email
+        </label>
+        <input
+          id="email"
+          type="email"
+          [value]="student.email"
+          disabled
+          class="input-field"
+        >
+      </div>
+
+      <!-- Telefone -->
+      <div class="form-group">
+        <label for="phone" class="label">
+          <span class="icon">📱</span> Telefone
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          [value]="student.phone"
+          disabled
+          class="input-field"
+        >
+      </div>
+
+      <!-- Matrícula -->
+      <div class="form-group">
+        <label for="matricula" class="label">
+          <span class="icon">#</span> Matrícula
+        </label>
+        <input
+          id="matricula"
+          type="text"
+          [value]="matricula"
+          disabled
+          class="input-field"
+        >
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label class="label">Status</label>
+        <div class="status-display">
+          <span [ngClass]="isActive ? 'status-dot active' : 'status-dot inactive'"></span>
+          <span class="status-text">{{ isActive ? 'Ativo' : 'Inativo' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botão Voltar -->
+    <div class="button-group">
+      <button (click)="onCancel()" class="btn btn-secondary">Voltar</button>
+    </div>
+  </div>
+</div>

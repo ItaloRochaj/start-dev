@@ -37,6 +37,9 @@ export class StudentsComponent implements OnInit {
   loading = false;
   searchTerm = '';
   searchType = 'name';
+  showNewStudentModal = false;
+  showStudentDetailsModal = false;
+  selectedStudentId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -92,8 +95,16 @@ export class StudentsComponent implements OnInit {
   }
 
   viewStudent(id: string): void {
-    console.log('Ver detalhes do aluno:', id);
-    // TODO: Implementar navegação para detalhes
+    console.log('🔍 Abrindo detalhes do aluno:', id);
+    this.selectedStudentId = id;
+    this.showStudentDetailsModal = true;
+    console.log('📋 Modal aberto - showStudentDetailsModal:', this.showStudentDetailsModal);
+    console.log('📋 Aluno selecionado - selectedStudentId:', this.selectedStudentId);
+  }
+
+  closeStudentDetailsModal(): void {
+    this.showStudentDetailsModal = false;
+    this.selectedStudentId = null;
   }
 
   editStudent(id: string): void {
@@ -141,8 +152,12 @@ export class StudentsComponent implements OnInit {
   }
 
   newStudent(): void {
-    console.log('Criar novo aluno');
-    // TODO: Implementar navegação para novo aluno
+    this.showNewStudentModal = true;
+  }
+
+  closeNewStudentModal(): void {
+    this.showNewStudentModal = false;
+    this.loadStudents(this.currentPage);
   }
 
   getPageNumbers(): number[] {
