@@ -1,0 +1,194 @@
+<div class="edit-container">
+  <!-- Header -->
+  <div class="edit-header">
+    <div class="back-link">
+      <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Editar Aluno</span>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Carregando dados...</p>
+  </div>
+
+  <!-- Erro e Sucesso Messages -->
+  <div *ngIf="errorMessage && !loading" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage && !loading" class="success-message">
+    {{ successMessage }}
+  </div>
+
+  <!-- Formulário -->
+  <div *ngIf="student && !loading" class="edit-content">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!-- Seção de Foto -->
+      <div class="form-section">
+        <h3>Foto do Aluno</h3>
+        <div class="photo-section">
+          <div class="photo-preview">
+            <img
+              [src]="photoPreview || getDefaultAvatar()"
+              alt="Foto de {{ student.name }}"
+              (error)="onPhotoError($event)"
+            >
+            <div class="photo-actions">
+              <button type="button" class="btn-photo" (click)="triggerFileInput()" title="Alterar Foto">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </button>
+              <input
+                type="file"
+                id="photoInput"
+                (change)="onFileSelected($event)"
+                accept="image/*"
+                hidden
+              >
+              <button
+                type="button"
+                class="btn-remove-photo"
+                *ngIf="photoPreview"
+                (click)="removePhoto()"
+                title="Remover Foto"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Dados -->
+      <div class="form-section">
+        <h3>Dados do Aluno</h3>
+
+        <!-- Nome Completo (desabilitado) -->
+        <div class="form-group">
+          <label for="name" class="form-label form-label-disabled">Nome Completo</label>
+          <input
+            type="text"
+            id="name"
+            [value]="student.name"
+            disabled
+            class="form-input form-input-disabled"
+            title="Campo não pode ser editado"
+          >
+        </div>
+
+        <!-- Email (editável) -->
+        <div class="form-group">
+          <label for="email" class="form-label">E-mail</label>
+          <div class="input-wrapper">
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-input"
+              [class.is-invalid]="hasError('email')"
+              placeholder="aluno@email.com"
+              (change)="onFormChange()"
+            >
+          </div>
+          <span class="error-text" *ngIf="hasError('email')">
+            {{ getErrorMessage('email') }}
+          </span>
+        </div>
+
+        <!-- Telefone (editável) -->
+        <div class="form-group">
+          <label for="phone" class="form-label">Telefone</label>
+          <div class="input-wrapper">
+            <input
+              type="text"
+              id="phone"
+              formControlName="phone"
+              class="form-input"
+              [class.is-invalid]="hasError('phone')"
+              placeholder="(00) 00000-0000"
+              (input)="formatPhone($event)"
+            >
+          </div>
+          <span class="error-text" *ngIf="hasError('phone')">
+            {{ getErrorMessage('phone') }}
+          </span>
+        </div>
+
+        <!-- Matrícula (desabilitado) -->
+        <div class="form-group">
+          <label for="matricula" class="form-label form-label-disabled">Matrícula</label>
+          <input
+            type="text"
+            id="matricula"
+            [value]="student && student.id ? formatMatricula(student.id) : '-'"
+            disabled
+            class="form-input form-input-disabled"
+            title="Campo não pode ser editado"
+          >
+        </div>
+
+        <!-- Status (editável) -->
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <div class="status-radio-group">
+            <label class="radio-option">
+              <input
+                type="radio"
+                formControlName="status"
+                value="Ativo"
+                (change)="onFormChange()"
+              >
+              <span class="radio-label">
+                <span class="radio-dot"></span> Ativo
+              </span>
+            </label>
+            <label class="radio-option">
+              <input
+                type="radio"
+                formControlName="status"
+                value="Inativo"
+                (change)="onFormChange()"
+              >
+              <span class="radio-label">
+                <span class="radio-dot"></span> Inativo
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn-revert"
+          [disabled]="!hasChanges || submitting"
+          (click)="revertChanges()"
+          title="Reverter para valores originais"
+        >
+          Limpar
+        </button>
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="!hasChanges || form.invalid || submitting"
+        >
+          {{ submitting ? 'Salvando...' : 'Salvar Alterações' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
