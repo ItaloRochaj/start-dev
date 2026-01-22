@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) {
     this.loginForm = this.formBuilder.group({
       usuario: ['', [Validators.required, this.usuarioValidator.bind(this)]],
@@ -75,7 +77,6 @@ export class LoginComponent implements OnInit {
 
       const usuarioControl = this.loginForm.get('usuario');
       const senhaControl = this.loginForm.get('senha');
-
       const credentials = {
         usuario: usuarioControl ? usuarioControl.value : '',
         senha: senhaControl ? senhaControl.value : ''
@@ -91,13 +92,16 @@ export class LoginComponent implements OnInit {
             this.authService.setToken(response.token);
           }
 
+          this.toastService.success('Login realizado com sucesso!');
+
           // TODO: Redirecionar para dashboard ou home
           // this.router.navigate(['/dashboard']);
         },
         (error) => {
           this.isLoading = false;
           console.error('Login failed:', error);
-          this.errorMessage = error && error.error && error.error.message ? error.error.message : 'Erro ao fazer login. Tente novamente.';
+          const errorMsg = error && error.error && error.error.message ? error.error.message : 'Erro ao fazer login. Tente novamente.';
+          this.toastService.error(errorMsg);
         }
       );
     }
