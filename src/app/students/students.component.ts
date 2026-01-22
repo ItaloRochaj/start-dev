@@ -8,6 +8,7 @@ export interface Student {
   cpf: string;
   email: string;
   phone: string;
+  status?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -39,7 +40,10 @@ export class StudentsComponent implements OnInit {
   searchType = 'name';
   showNewStudentModal = false;
   showStudentDetailsModal = false;
+  showEditStudentModal = false;
+  showDeleteConfirmationModal = false;
   selectedStudentId: string | null = null;
+  selectedStudentName: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +55,14 @@ export class StudentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Ativar modo mock
+    this.studentsService.setMockMode(true);
+
+    // Limpar e recriar dados de teste
+    this.studentsService.clearMockData();
+    this.studentsService.seedMockTestData();
+    console.log('📌 Dados de teste criados automaticamente');
+
     this.loadStudents();
   }
 
@@ -108,21 +120,44 @@ export class StudentsComponent implements OnInit {
   }
 
   editStudent(id: string): void {
-    console.log('Editar aluno:', id);
-    // TODO: Implementar navegação para edição
+    console.log('✏️ Abrindo edição do aluno:', id);
+    this.selectedStudentId = id;
+    console.log('Estado antes:', {
+      selectedStudentId: this.selectedStudentId,
+      showEditStudentModal: this.showEditStudentModal
+    });
+    this.showEditStudentModal = true;
+    console.log('Estado depois:', {
+      selectedStudentId: this.selectedStudentId,
+      showEditStudentModal: this.showEditStudentModal
+    });
+  }
+
+  closeEditStudentModal(): void {
+    this.showEditStudentModal = false;
+    this.selectedStudentId = null;
+    this.loadStudents(this.currentPage);
   }
 
   deleteStudent(id: string): void {
-    if (confirm('Tem certeza que deseja remover este aluno?')) {
-      this.studentsService.deleteStudent(id).subscribe({
-        next: () => {
-          this.loadStudents(this.currentPage);
-        },
-        error: (error) => {
-          console.error('Erro ao deletar aluno:', error);
-        }
-      });
+    const student = this.students.find(s => s.id === id);
+    if (student) {
+      console.log('🗑️ Abrindo confirmação de exclusão:', id);
+      this.selectedStudentId = id;
+      this.selectedStudentName = student.name;
+      this.showDeleteConfirmationModal = true;
     }
+  }
+
+  closeDeleteConfirmationModal(): void {
+    this.showDeleteConfirmationModal = false;
+    this.selectedStudentId = null;
+    this.selectedStudentName = null;
+  }
+
+  onStudentDeleted(): void {
+    console.log('✅ Aluno deletado com sucesso');
+    this.loadStudents(this.currentPage);
   }
 
   goToPage(page: number): void {
@@ -179,9 +214,21 @@ export class StudentsComponent implements OnInit {
     return pages;
   }
 
-  getStatusClass(status: string): string {
-    // Usando o campo updatedAt como proxy para status (Ativo/Inativo)
-    // Em um caso real, haveria um campo status na resposta
-    return 'active'; // TODO: Ajustar baseado na resposta real
+  getStatusClass(status?: string | any): string {
+    if (!status || typeof status !== 'string') {
+      return 'active';
+    }
+    return status.toLowerCase() === 'ativo' ? 'active' : 'inactive';
+  }
+
+  formatMatricula(id: string): string {
+    const currentYear = new Date().getFullYear();
+    const studentId = parseInt(id, 10);
+
+    if (studentId <= 100) {
+      return `${currentYear}00${studentId}`;
+    } else {
+      return `${currentYear}${studentId}`;
+    }
   }
 }

@@ -1,6 +1,6 @@
 <div class="container">
   <div class="header">
-    <h1>Start Devs</h1>
+    <h1>Start Students</h1>
     <button class="btn-new-student" (click)="newStudent()">Novo Aluno</button>
   </div>
 
@@ -28,12 +28,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let student of students" [ngClass]="'status-' + getStatusClass(student.id)">
-          <td>{{ student.cpf }}</td>
+        <tr *ngFor="let student of students" [ngClass]="'status-' + getStatusClass(student.status)">
+          <td>{{ formatMatricula(student.id) }}</td>
           <td>{{ student.name }}</td>
           <td>
-            <span class="status-badge" [ngClass]="'status-' + getStatusClass(student.id)">
-              Ativo
+            <span class="status-badge" [ngClass]="'status-' + getStatusClass(student.status)">
+              {{ student.status || 'Ativo' }}
             </span>
           </td>
           <td class="actions-cell">
@@ -42,21 +42,31 @@
               (click)="viewStudent(student.id)"
               title="Ver detalhes"
             >
-              <i class="icon-eye">👁️</i>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
             </button>
             <button
               class="action-btn edit-btn"
               (click)="editStudent(student.id)"
               title="Editar"
             >
-              <i class="icon-edit">✏️</i>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
             </button>
             <button
               class="action-btn delete-btn"
               (click)="deleteStudent(student.id)"
               title="Excluir"
             >
-              <i class="icon-delete">🗑️</i>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
             </button>
           </td>
         </tr>
@@ -118,9 +128,6 @@
   <!-- Modal Novo Aluno -->
   <div class="modal-overlay" *ngIf="showNewStudentModal" (click)="closeNewStudentModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <button class="modal-close" (click)="closeNewStudentModal()">✕</button>
-      </div>
       <app-new-student (closeModal)="closeNewStudentModal()"></app-new-student>
     </div>
   </div>
@@ -132,6 +139,29 @@
         [studentId]="selectedStudentId"
         (closeModal)="closeStudentDetailsModal()">
       </app-student-details>
+    </div>
+  </div>
+
+  <!-- Modal Editar Aluno -->
+  <div class="modal-overlay" *ngIf="showEditStudentModal" (click)="closeEditStudentModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <app-edit-student
+        [studentId]="selectedStudentId"
+        (closeModal)="closeEditStudentModal()"
+        (studentUpdated)="loadStudents(currentPage)">
+      </app-edit-student>
+    </div>
+  </div>
+
+  <!-- Modal Confirmar Exclusão -->
+  <div class="modal-overlay" *ngIf="showDeleteConfirmationModal" (click)="closeDeleteConfirmationModal()">
+    <div class="modal-content modal-content-small" (click)="$event.stopPropagation()">
+      <app-delete-confirmation
+        [studentId]="selectedStudentId"
+        [studentName]="selectedStudentName"
+        (closeModal)="closeDeleteConfirmationModal()"
+        (studentDeleted)="onStudentDeleted()">
+      </app-delete-confirmation>
     </div>
   </div>
 </div>
