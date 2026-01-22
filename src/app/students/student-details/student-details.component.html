@@ -1,17 +1,17 @@
 <div class="details-container">
   <div class="details-header">
-    <button class="back-btn" (click)="onCancel()" title="Voltar">
-      ← Detalhes do Aluno
-    </button>
+    <div class="back-link">
+      <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Detalhes do Aluno</span>
+    </div>
   </div>
 
   <div *ngIf="loading" class="loading-spinner">
     <div class="spinner"></div>
     <p>Carregando detalhes...</p>
-  </div>
-
-  <div *ngIf="errorMessage && !loading" class="error-message">
-    {{ errorMessage }}
   </div>
 
   <div *ngIf="student && !loading" class="details-content">
@@ -29,8 +29,7 @@
     <div class="info-section">
       <!-- Nome Completo -->
       <div class="form-group">
-        <label for="fullName" class="label">
-          <span class="icon">👤</span> Nome Completo
+        <label for="fullName" class="label">Nome Completo
         </label>
         <input
           id="fullName"
@@ -43,8 +42,7 @@
 
       <!-- CPF -->
       <div class="form-group">
-        <label for="cpf" class="label">
-          <span class="icon">📋</span> CPF
+        <label for="cpf" class="label">CPF
         </label>
         <input
           id="cpf"
@@ -57,8 +55,7 @@
 
       <!-- Email -->
       <div class="form-group">
-        <label for="email" class="label">
-          <span class="icon">📧</span> Email
+        <label for="email" class="label">E-mail
         </label>
         <input
           id="email"
@@ -71,8 +68,7 @@
 
       <!-- Telefone -->
       <div class="form-group">
-        <label for="phone" class="label">
-          <span class="icon">📱</span> Telefone
+        <label for="phone" class="label"> Telefone
         </label>
         <input
           id="phone"
@@ -85,8 +81,7 @@
 
       <!-- Matrícula -->
       <div class="form-group">
-        <label for="matricula" class="label">
-          <span class="icon">#</span> Matrícula
+        <label for="matricula" class="label">Matrícula
         </label>
         <input
           id="matricula"

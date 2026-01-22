@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { StudentsService, StudentOutputDTO } from '../../services/students.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-student-details',
@@ -14,7 +15,10 @@ export class StudentDetailsComponent implements OnInit {
   loading = true;
   errorMessage = '';
 
-  constructor(private studentsService: StudentsService) {}
+  constructor(
+    private studentsService: StudentsService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     if (this.studentId) {
@@ -41,7 +45,7 @@ export class StudentDetailsComponent implements OnInit {
         console.error('❌ Erro ao carregar detalhes:', error);
         console.error('📌 Status do erro:', error.status || 'Sem status');
         console.error('📌 Mensagem do erro:', error.message || 'Sem mensagem');
-        this.errorMessage = error.message || 'Erro ao carregar detalhes do aluno. Tente novamente.';
+        this.toastService.error(error.message || 'Erro ao carregar detalhes do aluno. Tente novamente.');
       }
     );
   }
@@ -51,18 +55,27 @@ export class StudentDetailsComponent implements OnInit {
   }
 
   get status(): string {
-    return this.isActive ? 'Ativo' : 'Inativo';
+    return this.student && this.student.status ? this.student.status : 'Ativo';
   }
 
   get isActive(): boolean {
-    // TODO: Quando o backend tiver campo de status, adicionar aqui
-    // Por enquanto, todos os alunos são "Ativo"
-    return true;
+    return this.student && this.student.status ? this.student.status.toLowerCase() === 'ativo' : true;
   }
 
   get matricula(): string {
     // Usa ID ou retorna placeholder
-    return this.student && this.student.id ? String(this.student.id) : '-';
+    return this.student && this.student.id ? this.formatMatricula(this.student.id) : '-';
+  }
+
+  formatMatricula(id: string | number): string {
+    const currentYear = new Date().getFullYear();
+    const studentId = typeof id === 'string' ? parseInt(id, 10) : id;
+
+    if (studentId <= 100) {
+      return `${currentYear}00${studentId}`;
+    } else {
+      return `${currentYear}${studentId}`;
+    }
   }
 
   getDefaultAvatar(): string {
