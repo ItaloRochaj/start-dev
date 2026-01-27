@@ -64,7 +64,7 @@
   flex: 1;
   padding: 12px 16px;
   border: 2px solid #ddd;
-  border-radius: 6px;
+  border-radius: 50px;
   font-size: 14px;
   transition: border-color 0.3s ease;
 }
@@ -254,35 +254,50 @@
   padding: 20px;
   border-top: 1px solid #dee2e6;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .pagination-btn {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
+  padding: 10px 14px;
+  border: none;
   background-color: white;
-  color: #333;
-  border-radius: 4px;
+  color: #666;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.pagination-btn:hover:not(:disabled) {
-  background-color: #e7f3ff;
-  border-color: #0056b3;
-  color: #0056b3;
+.pagination-btn:hover:not(:disabled):not(.active) {
+  background-color: #f0f0f0;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .pagination-btn.active {
-  background-color: #c97c5c;
+  background-color: #dc3545;
   color: white;
-  border-color: #c97c5c;
+  border: none;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+  border-radius: 10px;
+}
+
+.pagination-btn.active:hover {
+  background-color: #c82333;
+  box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4);
 }
 
 .pagination-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+  color: #999;
 }
 
 /* Info Bar */
