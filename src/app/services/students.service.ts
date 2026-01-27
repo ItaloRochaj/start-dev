@@ -120,7 +120,7 @@ export class StudentsService {
 
   getStudents(
     page: number = 0,
-    size: number = 10,
+    size: number = 4,
     search?: string,
     searchType: string = 'name'
   ): Observable<ApiResponse<StudentPagedOutputDTO>> {
@@ -147,7 +147,7 @@ export class StudentsService {
 
   private getMockStudents(
     page: number = 0,
-    size: number = 10,
+    size: number = 4,
     search?: string,
     searchType: string = 'name'
   ): Observable<ApiResponse<StudentPagedOutputDTO>> {

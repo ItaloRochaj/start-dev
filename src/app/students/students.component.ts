@@ -32,7 +32,7 @@ export class StudentsComponent implements OnInit {
   students: Student[] = [];
   searchForm: FormGroup;
   currentPage = 0;
-  pageSize = 10;
+  pageSize = 4;
   totalPages = 0;
   totalElements = 0;
   loading = false;
