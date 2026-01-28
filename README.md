@@ -529,13 +529,6 @@ location.reload();
 
 - GitHub: [@ItaloRochaj](https://github.com/ItaloRochaj)
 - LinkedIn: [Italo Rocha](https://www.linkedin.com/in/italorocha/)
-
----
-
-## 📄 Licença
-
-Este projeto é distribuído sob a licença MIT.
-
 ---
 
 **Versão:** 1.0.0 | **Última atualização:** January 2026
