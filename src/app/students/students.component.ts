@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { StudentsService } from '../services/students.service';
+import { AuthService } from '../services/auth.service';
 
 export interface Student {
   id: string;
@@ -47,7 +49,9 @@ export class StudentsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private studentsService: StudentsService
+    private studentsService: StudentsService,
+    private authService: AuthService,
+    private router: Router
   ) {
     this.searchForm = this.fb.group({
       search: ['']
@@ -185,6 +189,13 @@ export class StudentsComponent implements OnInit {
   closeNewStudentModal(): void {
     this.showNewStudentModal = false;
     this.loadStudents(this.currentPage);
+  }
+
+  logout(): void {
+    if (confirm('Tem certeza que deseja sair?')) {
+      this.authService.logout();
+      this.router.navigate(['/login']);
+    }
   }
 
   getPageNumbers(): number[] {
