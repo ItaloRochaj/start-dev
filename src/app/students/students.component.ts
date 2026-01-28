@@ -55,12 +55,6 @@ export class StudentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Desabilitado: mock mode sempre desativado, usar backend real
-    // this.studentsService.setMockMode(true);
-    // this.studentsService.clearMockData();
-    // this.studentsService.seedMockTestData();
-    // console.log('📌 Dados de teste criados automaticamente');
-
     this.loadStudents();
   }
 
