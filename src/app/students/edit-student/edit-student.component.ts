@@ -44,7 +44,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['studentId'] && !changes['studentId'].firstChange) {
-      console.log('🔄 studentId mudou para:', this.studentId);
+      console.log('studentId mudou para:', this.studentId);
       if (this.studentId) {
         this.loadStudentDetails();
       }
@@ -55,13 +55,13 @@ export class EditStudentComponent implements OnInit, OnChanges {
     this.loading = true;
     this.errorMessage = '';
 
-    console.log('✏️ Carregando aluno para edição:', this.studentId);
+    console.log(' Carregando aluno para edição:', this.studentId);
 
     this.studentsService.getStudentDetail(this.studentId!).subscribe(
       (response: any) => {
         this.loading = false;
         this.student = response.data || response;
-        console.log('✅ Aluno carregado para edição:', this.student);
+        console.log(' Aluno carregado para edição:', this.student);
 
         // Preparar formulário com dados do aluno
         if (this.student) {
@@ -92,7 +92,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
       },
       (error) => {
         this.loading = false;
-        console.error('❌ Erro ao carregar aluno para edição:', error);
+        console.error('Erro ao carregar aluno para edição:', error);
         this.errorMessage = 'Erro ao carregar dados do aluno. Tente novamente.';
       }
     );
@@ -246,12 +246,12 @@ export class EditStudentComponent implements OnInit, OnChanges {
       photo: this.photoPreview ? String(this.photoPreview) : this.student.photo
     };
 
-    console.log('💾 Atualizando aluno:', this.student.id, updateData);
+    console.log('Atualizando aluno:', this.student.id, updateData);
 
     this.studentsService.updateStudent(String(this.student.id), updateData).subscribe(
       (response: any) => {
         this.submitting = false;
-        console.log('✅ Aluno atualizado com sucesso:', response);
+        console.log(' Aluno atualizado com sucesso:', response);
         this.successMessage = 'Aluno atualizado com sucesso!';
 
         // Atualizar dados originais
@@ -269,7 +269,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
       },
       (error: any) => {
         this.submitting = false;
-        console.error('❌ Erro ao atualizar aluno:', error);
+        console.error(' Erro ao atualizar aluno:', error);
 
         let errorMsg = 'Erro ao atualizar aluno. Tente novamente.';
         if (error.error && typeof error.error === 'string') {
