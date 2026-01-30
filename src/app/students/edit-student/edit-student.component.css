@@ -345,8 +345,8 @@ form {
 
 /* Inativo - Cinza */
 .radio-option:nth-child(2) input[type="radio"]:checked + .radio-label .radio-dot {
-  background-color: #999;
-  border-color: #999;
+  background-color: #ffff00;
+  border-color: #ffff00;
   box-shadow: 0 0 0 3px rgba(153, 153, 153, 0.2);
 }
 

@@ -68,7 +68,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
           this.form.patchValue({
             email: this.student.email || '',
             phone: this.student.phone || '',
-            status: 'Ativo' // Default: sempre Ativo
+            status: this.student.status || 'Ativo' // Usar status do aluno, ou Ativo como padrão
           });
 
           // Se houver foto, processar e usar como preview
@@ -80,7 +80,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
           this.originalData = {
             email: this.student.email,
             phone: this.student.phone,
-            status: 'Ativo',
+            status: this.student.status || 'Ativo',
             photo: this.student.photo
           };
 
