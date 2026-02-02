@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 
 export interface StudentOutputDTO {
   id: string | number;
+  matricula?: string;
   name: string;
   cpf: string;
   email: string;
