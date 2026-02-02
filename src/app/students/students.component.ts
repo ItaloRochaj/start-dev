@@ -6,6 +6,7 @@ import { AuthService } from '../services/auth.service';
 
 export interface Student {
   id: string;
+  matricula?: string;
   name: string;
   cpf: string;
   email: string;
@@ -87,7 +88,7 @@ export class StudentsComponent implements OnInit {
     if (searchValue) {
       // Detectar se é número (matrícula) ou texto (nome)
       this.searchTerm = searchValue;
-      this.searchType = /^\d+$/.test(searchValue) ? 'cpf' : 'name';
+      this.searchType = /^\d+$/.test(searchValue) ? 'matricula' : 'name';
     } else {
       this.searchTerm = '';
     }
@@ -222,16 +223,5 @@ export class StudentsComponent implements OnInit {
       return 'active';
     }
     return status.toLowerCase() === 'ativo' ? 'active' : 'inactive';
-  }
-
-  formatMatricula(id: string): string {
-    const currentYear = new Date().getFullYear();
-    const studentId = parseInt(id, 10);
-
-    if (studentId <= 100) {
-      return `${currentYear}00${studentId}`;
-    } else {
-      return `${currentYear}${studentId}`;
-    }
   }
 }
