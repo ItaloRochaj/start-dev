@@ -377,15 +377,4 @@ export class EditStudentComponent implements OnInit, OnChanges {
   onPhotoError(event: any): void {
     event.target.src = this.getDefaultAvatar();
   }
-
-  formatMatricula(id: string): string {
-    const currentYear = new Date().getFullYear();
-    const studentId = parseInt(id, 10);
-
-    if (studentId <= 100) {
-      return `${currentYear}00${studentId}`;
-    } else {
-      return `${currentYear}${studentId}`;
-    }
-  }
 }

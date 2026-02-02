@@ -84,19 +84,8 @@ export class StudentDetailsComponent implements OnInit {
   }
 
   get matricula(): string {
-    // Usa ID ou retorna placeholder
-    return this.student && this.student.id ? this.formatMatricula(this.student.id) : '-';
-  }
-
-  formatMatricula(id: string | number): string {
-    const currentYear = new Date().getFullYear();
-    const studentId = typeof id === 'string' ? parseInt(id, 10) : id;
-
-    if (studentId <= 100) {
-      return `${currentYear}00${studentId}`;
-    } else {
-      return `${currentYear}${studentId}`;
-    }
+    // Usa matrícula gerada
+    return this.student && this.student.matricula ? this.student.matricula : '-';
   }
 
   getDefaultAvatar(): string {
