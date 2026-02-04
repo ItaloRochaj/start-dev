@@ -1,14 +1,16 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentsService } from '../../services/students.service';
 import { ToastService } from '../../services/toast.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-new-student',
   templateUrl: './new-student.component.html',
   styleUrls: ['./new-student.component.css']
 })
-export class NewStudentComponent implements OnInit {
+export class NewStudentComponent implements OnInit, OnDestroy {
   @Output() closeModal = new EventEmitter<void>();
 
   form: FormGroup;
@@ -16,6 +18,11 @@ export class NewStudentComponent implements OnInit {
   errorMessage = '';
   photoPreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
+  cpfAlreadyExists = false;
+  emailAlreadyExists = false;
+  validatingCpf = false;
+  validatingEmail = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -30,7 +37,99 @@ export class NewStudentComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setupCpfValidation();
+    this.setupEmailValidation();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Configura validação em tempo real de CPF
+   */
+  private setupCpfValidation(): void {
+    const cpfControl = this.form.get('cpf');
+    if (cpfControl) {
+      cpfControl.statusChanges
+        .pipe(
+          debounceTime(800),
+          distinctUntilChanged()
+        )
+        .subscribe(() => {
+          const cpfValue = cpfControl.value && cpfControl.value.replace(/\D/g, '');
+          if (cpfValue && cpfValue.length === 11 && cpfControl.valid) {
+            this.validateCpf(cpfValue);
+          }
+        });
+    }
+  }
+
+  /**
+   * Configura validação em tempo real de Email
+   */
+  private setupEmailValidation(): void {
+    const emailControl = this.form.get('email');
+    if (emailControl) {
+      emailControl.statusChanges
+        .pipe(
+          debounceTime(800),
+          distinctUntilChanged()
+        )
+        .subscribe(() => {
+          const emailValue = emailControl.value;
+          if (emailValue && emailControl.valid) {
+            this.validateEmail(emailValue);
+          }
+        });
+    }
+  }
+
+  /**
+   * Valida se CPF já existe
+   */
+  private validateCpf(cpf: string): void {
+    this.validatingCpf = true;
+    this.cpfAlreadyExists = false;
+
+    this.studentsService.validateCpfExists(cpf).subscribe(
+      (response: any) => {
+        this.validatingCpf = false;
+        this.cpfAlreadyExists = response.data === true;
+        if (this.cpfAlreadyExists) {
+          this.toastService.warning('Este CPF já está cadastrado');
+        }
+      },
+      (error) => {
+        this.validatingCpf = false;
+        console.error('Erro ao validar CPF:', error);
+      }
+    );
+  }
+
+  /**
+   * Valida se Email já existe
+   */
+  private validateEmail(email: string): void {
+    this.validatingEmail = true;
+    this.emailAlreadyExists = false;
+
+    this.studentsService.validateEmailExists(email).subscribe(
+      (response: any) => {
+        this.validatingEmail = false;
+        this.emailAlreadyExists = response.data === true;
+        if (this.emailAlreadyExists) {
+          this.toastService.warning('Este Email já está cadastrado');
+        }
+      },
+      (error) => {
+        this.validatingEmail = false;
+        console.error('Erro ao validar Email:', error);
+      }
+    );
+  }
 
   /**
    * Manipula o carregamento de foto
@@ -124,6 +223,17 @@ export class NewStudentComponent implements OnInit {
    * Salva novo aluno
    */
   onSubmit(): void {
+    // Validar se há duplicação conhecida
+    if (this.cpfAlreadyExists) {
+      this.toastService.error('Não é possível cadastrar: CPF já existe');
+      return;
+    }
+
+    if (this.emailAlreadyExists) {
+      this.toastService.error('Não é possível cadastrar: Email já existe');
+      return;
+    }
+
     if (this.form.invalid) {
       this.toastService.error('Por favor, preencha todos os campos corretamente');
       return;
@@ -145,42 +255,37 @@ export class NewStudentComponent implements OnInit {
       photo: this.photoPreview ? String(this.photoPreview) : null
     };
 
-    console.log('Enviando para API:', formData);
+    console.log('Enviando aluno para API:', formData);
 
     this.studentsService.createStudent(formData).subscribe(
       (response: any) => {
         this.loading = false;
-        console.log('Sucesso:', response);
+        console.log('✅ Aluno criado com sucesso:', response);
         this.toastService.success('Aluno cadastrado com sucesso!');
-        this.closeModal.emit();
+        // Aguarda um pouco para o usuário ver o toast, depois fecha
+        setTimeout(() => {
+          this.closeModal.emit();
+        }, 1500);
       },
       (error: any) => {
         this.loading = false;
-        console.error('Erro completo:', error);
-        console.error('Status:', error.status);
-        console.error('Response:', error.error);
-
-        // Verificar se o cadastro foi realizado mesmo com status 400
-        // Isso pode acontecer se houver validação tardia
-        if (error.status === 400 && error.error && error.error.data) {
-          // Cadastro foi realizado com sucesso
-          this.toastService.success('Aluno cadastrado com sucesso!');
-          this.closeModal.emit();
-          return;
-        }
+        console.error('❌ Erro ao criar aluno:', error);
 
         let errorMsg = 'Erro ao cadastrar aluno. Tente novamente.';
 
-        if (error.error && typeof error.error === 'string') {
-          errorMsg = error.error;
-        } else if (error.error && error.error.message) {
-          errorMsg = error.error.message;
-        } else if (error.error && error.error.error) {
-          errorMsg = error.error.error;
+        // Tratamento específico por status HTTP
+        if (error.status === 409) {
+          // Conflict - duplicação
+          errorMsg = (error.error && error.error.message) || 'Dados duplicados: CPF ou Email já cadastrados';
+        } else if (error.status === 400) {
+          // Bad Request - validação
+          errorMsg = (error.error && error.error.message) || 'Dados inválidos. Verifique os campos preenchidos.';
+        } else if (error.status === 500) {
+          errorMsg = 'Erro no servidor. Tente novamente mais tarde.';
         }
 
         this.toastService.error(errorMsg);
-        console.error('Mensagem de erro tratada:', errorMsg);
+        console.error('Mensagem de erro:', errorMsg);
       }
     );
   }

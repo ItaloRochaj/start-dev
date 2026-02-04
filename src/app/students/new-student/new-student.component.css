@@ -98,6 +98,7 @@
 /* Content */
 .edit-content {
   padding: 20px;
+}
 
 /* Form Section */
 .form-section {
@@ -438,9 +439,6 @@
   .edit-content {
     padding: 16px;
   }
-}
-    padding: 12px;
-  }
 
   .form-container {
     padding: 16px;
@@ -512,3 +510,59 @@
     padding: 12px 16px;
     font-size: 14px;
   }
+}
+
+/* Spinner de validação inline */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.validating-spinner {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-icon {
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+  color: #c97c5c;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Botão submit com spinner */
+.btn-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  color: white;
+}
+
+/* Input com erro (CPF/Email duplicado) */
+.form-input.is-invalid {
+  border-color: #e74c3c;
+  background-color: #fadbd8;
+}

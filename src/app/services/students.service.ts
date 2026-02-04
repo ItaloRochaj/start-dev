@@ -93,4 +93,22 @@ export class StudentsService {
         return throwError(err);
       }));
   }
+
+  validateCpfExists(cpf: string): Observable<ApiResponse<boolean>> {
+    return this.http.get<ApiResponse<boolean>>(`${this.apiUrl}/validate/cpf`, {
+      params: { cpf }
+    }).pipe(catchError(err => {
+      console.error('Erro ao validar CPF:', err);
+      return throwError(err);
+    }));
+  }
+
+  validateEmailExists(email: string): Observable<ApiResponse<boolean>> {
+    return this.http.get<ApiResponse<boolean>>(`${this.apiUrl}/validate/email`, {
+      params: { email }
+    }).pipe(catchError(err => {
+      console.error('Erro ao validar Email:', err);
+      return throwError(err);
+    }));
+  }
 }

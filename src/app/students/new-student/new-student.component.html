@@ -92,12 +92,20 @@
               id="email"
               formControlName="email"
               class="form-input"
-              [class.is-invalid]="hasError('email')"
+              [class.is-invalid]="hasError('email') || emailAlreadyExists"
               placeholder="aluno@email.com"
             >
+            <span *ngIf="validatingEmail" class="validating-spinner">
+              <svg class="spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </span>
           </div>
           <span class="error-text" *ngIf="hasError('email')">
             {{ getErrorMessage('email') }}
+          </span>
+          <span class="error-text" *ngIf="emailAlreadyExists && !hasError('email')">
+            Este Email já está cadastrado
           </span>
         </div>
 
@@ -110,13 +118,21 @@
               id="cpf"
               formControlName="cpf"
               class="form-input"
-              [class.is-invalid]="hasError('cpf')"
+              [class.is-invalid]="hasError('cpf') || cpfAlreadyExists"
               placeholder="000.000.000-00"
               (input)="formatCPF($event)"
             >
+            <span *ngIf="validatingCpf" class="validating-spinner">
+              <svg class="spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </span>
           </div>
           <span class="error-text" *ngIf="hasError('cpf')">
             {{ getErrorMessage('cpf') }}
+          </span>
+          <span class="error-text" *ngIf="cpfAlreadyExists && !hasError('cpf')">
+            Este CPF já está cadastrado
           </span>
         </div>
 
@@ -142,15 +158,26 @@
 
       <!-- Botões de Ação -->
       <div class="form-actions">
-        <button type="button" class="btn-cancel" (click)="onCancel()">
+        <button 
+          type="button" 
+          class="btn-cancel" 
+          (click)="onCancel()"
+          [disabled]="loading"
+        >
           Cancelar
         </button>
         <button
           type="submit"
           class="btn-submit"
-          [disabled]="form.invalid || loading"
+          [disabled]="form.invalid || loading || cpfAlreadyExists || emailAlreadyExists"
         >
-          Cadastrar
+          <span *ngIf="!loading">Cadastrar</span>
+          <span *ngIf="loading">
+            <svg class="btn-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+            Processando...
+          </span>
         </button>
       </div>
     </form>
