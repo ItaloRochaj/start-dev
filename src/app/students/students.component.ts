@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StudentsService } from '../services/students.service';
 import { AuthService } from '../services/auth.service';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 export interface Student {
   id: string;
@@ -31,7 +33,7 @@ export interface PagedResponse {
   templateUrl: './students.component.html',
   styleUrls: ['./students.component.css']
 })
-export class StudentsComponent implements OnInit {
+export class StudentsComponent implements OnInit, OnDestroy {
   students: Student[] = [];
   searchForm: FormGroup;
   currentPage = 0;
@@ -47,6 +49,7 @@ export class StudentsComponent implements OnInit {
   showDeleteConfirmationModal = false;
   selectedStudentId: string | null = null;
   selectedStudentName: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -61,6 +64,47 @@ export class StudentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStudents();
+    this.setupReactiveSearch();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private setupReactiveSearch(): void {
+    const searchControl = this.searchForm.get('search');
+    if (searchControl) {
+      searchControl.valueChanges
+        .pipe(
+          debounceTime(500),
+          distinctUntilChanged(),
+          switchMap((searchValue: string) => {
+            if (searchValue && searchValue.trim()) {
+              this.searchTerm = searchValue.trim();
+              // Detectar se é número (matrícula ou CPF) ou texto (nome)
+              this.searchType = /^\d+$/.test(searchValue.trim()) ? 'matricula' : 'name';
+            } else {
+              this.searchTerm = '';
+            }
+            this.currentPage = 0;
+            return this.studentsService.getStudents(0, this.pageSize, this.searchTerm, this.searchType);
+          }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (response: any) => {
+            this.students = response.data.content;
+            this.totalPages = response.data.totalPages;
+            this.totalElements = response.data.totalElements;
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('Erro ao buscar alunos:', error);
+            this.loading = false;
+          }
+        });
+    }
   }
 
   loadStudents(page: number = 0): void {

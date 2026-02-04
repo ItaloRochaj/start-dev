@@ -11,11 +11,10 @@
     <form [formGroup]="searchForm" class="search-form">
       <input
         type="text"
-        placeholder="Buscar por nome ou matrícula..."
+        placeholder="Digitar para buscar por nome ou matrícula..."
         formControlName="search"
         class="search-input"
       >
-      <button type="button" class="btn-search" (click)="onSearch()">Buscar</button>
       <button type="button" class="btn-clear" (click)="clearSearch()">Limpar</button>
     </form>
   </div>
