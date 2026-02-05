@@ -5,6 +5,7 @@ import { ToastService } from '../../services/toast.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { fullNameValidator } from './full-name.validator';
+import { validCPFValidator } from './cpf.validator';
 
 @Component({
   selector: 'app-new-student',
@@ -32,7 +33,7 @@ export class NewStudentComponent implements OnInit, OnDestroy {
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), fullNameValidator()]],
-      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
+      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/), validCPFValidator()]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/)]]
     });
@@ -336,6 +337,9 @@ export class NewStudentComponent implements OnInit, OnDestroy {
     }
     if (field.errors['fullNameShortWord']) {
       return 'Cada palavra do nome deve ter pelo menos 2 caracteres';
+    }
+    if (field.errors['invalidCPF']) {
+      return 'CPF inválido';
     }
     if (field.errors['pattern']) {
       if (fieldName === 'cpf') {
