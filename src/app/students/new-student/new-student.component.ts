@@ -35,7 +35,7 @@ export class NewStudentComponent implements OnInit, OnDestroy {
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), fullNameValidator()]],
       cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/), validCPFValidator()]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/)]]
+      phone: ['', [Validators.pattern(/^(\(\d{2}\)\s\d{4,5}-\d{4}|\d{8,11})?$/)]]
     });
   }
 
