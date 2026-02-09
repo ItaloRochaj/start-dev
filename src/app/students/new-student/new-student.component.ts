@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { fullNameValidator } from './full-name.validator';
 import { validCPFValidator } from './cpf.validator';
+import { validEmailValidator } from './email.validator';
 
 @Component({
   selector: 'app-new-student',
@@ -35,7 +36,7 @@ export class NewStudentComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), fullNameValidator()]],
       cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/), validCPFValidator()]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, validEmailValidator()]],
       phone: ['', [Validators.pattern(/^(\(\d{2}\)\s\d{4,5}-\d{4}|\d{8,11})?$/)]]
     });
   }
@@ -363,6 +364,9 @@ export class NewStudentComponent implements OnInit, OnDestroy {
     }
     if (field.errors['email']) {
       return 'Email inválido';
+    }
+    if (field.errors['invalidEmail']) {
+      return 'Email não pode conter acentos ou caracteres especiais (á, é, ã, ç, etc.)';
     }
     if (field.errors['fullName']) {
       return 'Nome deve ser completo (informe pelo menos nome e sobrenome)';

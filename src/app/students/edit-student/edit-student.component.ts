@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { StudentsService, StudentOutputDTO } from '../../services/students.service';
+import { validEmailValidator } from '../new-student/email.validator';
 
 @Component({
   selector: 'app-edit-student',
@@ -31,7 +32,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
     private sanitizer: DomSanitizer
   ) {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, validEmailValidator()]],
       phone: ['', [Validators.required, Validators.pattern(/^(\(\d{2}\)\s\d{4,5}-\d{4}|\d{8,11})$/)]],
       status: ['Ativo']
     });
@@ -359,6 +360,9 @@ export class EditStudentComponent implements OnInit, OnChanges {
     }
     if (field.errors['email']) {
       return 'Email inválido';
+    }
+    if (field.errors['invalidEmail']) {
+      return 'Email não pode conter acentos ou caracteres especiais (á, é, ã, ç, etc.)';
     }
     if (field.errors['pattern']) {
       if (fieldName === 'phone') {
