@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StudentsService } from '../services/students.service';
 import { AuthService } from '../services/auth.service';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { NewStudentComponent } from './new-student/new-student.component';
+import { EditStudentComponent } from './edit-student/edit-student.component';
 
 export interface Student {
   id: string;
@@ -34,6 +36,9 @@ export interface PagedResponse {
   styleUrls: ['./students.component.css']
 })
 export class StudentsComponent implements OnInit, OnDestroy {
+  @ViewChild(NewStudentComponent) newStudentComponent!: NewStudentComponent;
+  @ViewChild(EditStudentComponent) editStudentComponent!: EditStudentComponent;
+
   students: Student[] = [];
   searchForm: FormGroup;
   currentPage = 0;
@@ -50,6 +55,8 @@ export class StudentsComponent implements OnInit, OnDestroy {
   selectedStudentId: string | null = null;
   selectedStudentName: string | null = null;
   private destroy$ = new Subject<void>();
+  isClosingNewStudentModal = false;
+  isClosingEditStudentModal = false;
 
   constructor(
     private fb: FormBuilder,
@@ -174,10 +181,25 @@ export class StudentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  closeEditStudentModal(): void {
-    this.showEditStudentModal = false;
-    this.selectedStudentId = null;
-    this.loadStudents(this.currentPage);
+  closeEditStudentModal(shouldConfirm: boolean = false): void {
+    if (shouldConfirm && this.editStudentComponent) {
+      // Verificar se há alterações
+      if (this.editStudentComponent.hasChanges) {
+        if (confirm('Descartar alterações?')) {
+          this.showEditStudentModal = false;
+          this.selectedStudentId = null;
+          this.loadStudents(this.currentPage);
+        }
+      } else {
+        this.showEditStudentModal = false;
+        this.selectedStudentId = null;
+        this.loadStudents(this.currentPage);
+      }
+    } else {
+      this.showEditStudentModal = false;
+      this.selectedStudentId = null;
+      this.loadStudents(this.currentPage);
+    }
   }
 
   deleteStudent(id: string): void {
@@ -231,9 +253,39 @@ export class StudentsComponent implements OnInit, OnDestroy {
     this.showNewStudentModal = true;
   }
 
-  closeNewStudentModal(): void {
-    this.showNewStudentModal = false;
-    this.loadStudents(this.currentPage);
+  closeNewStudentModal(shouldConfirm: boolean = false): void {
+    if (shouldConfirm && this.newStudentComponent) {
+      // Verificar se há dados preenchidos
+      if (this.newStudentComponent.form.dirty || this.hasNewStudentFormData()) {
+        if (confirm('Descartar alterações?')) {
+          this.showNewStudentModal = false;
+          this.loadStudents(this.currentPage);
+        }
+      } else {
+        this.showNewStudentModal = false;
+        this.loadStudents(this.currentPage);
+      }
+    } else {
+      this.showNewStudentModal = false;
+      this.loadStudents(this.currentPage);
+    }
+  }
+
+  private hasNewStudentFormData(): boolean {
+    if (!this.newStudentComponent) return false;
+    const form = this.newStudentComponent.form;
+    
+    const nameControl = form.get('name');
+    const cpfControl = form.get('cpf');
+    const emailControl = form.get('email');
+    const phoneControl = form.get('phone');
+
+    const name = nameControl && nameControl.value ? nameControl.value.trim() : '';
+    const cpf = cpfControl && cpfControl.value ? cpfControl.value.trim() : '';
+    const email = emailControl && emailControl.value ? emailControl.value.trim() : '';
+    const phone = phoneControl && phoneControl.value ? phoneControl.value.trim() : '';
+    
+    return !!(name || cpf || email || phone);
   }
 
   logout(): void {

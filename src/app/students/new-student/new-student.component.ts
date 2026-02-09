@@ -14,6 +14,7 @@ import { validCPFValidator } from './cpf.validator';
 })
 export class NewStudentComponent implements OnInit, OnDestroy {
   @Output() closeModal = new EventEmitter<void>();
+  @Output() closeModalWithConfirm = new EventEmitter<boolean>();
 
   form: FormGroup;
   loading = false;
@@ -303,6 +304,37 @@ export class NewStudentComponent implements OnInit, OnDestroy {
     } else {
       this.closeModal.emit();
     }
+  }
+
+  /**
+   * Gerencia fechamento ao clicar no backdrop/fundo do modal
+   * Se há dados preenchidos, pede confirmação
+   */
+  onBackdropClick(): void {
+    if (this.form.dirty || this.hasFormData()) {
+      if (confirm('Descartar alterações?')) {
+        this.closeModal.emit();
+      }
+    } else {
+      this.closeModal.emit();
+    }
+  }
+
+  /**
+   * Verifica se há dados preenchidos no formulário
+   */
+  private hasFormData(): boolean {
+    const nameControl = this.form.get('name');
+    const cpfControl = this.form.get('cpf');
+    const emailControl = this.form.get('email');
+    const phoneControl = this.form.get('phone');
+
+    const name = nameControl && nameControl.value ? nameControl.value.trim() : '';
+    const cpf = cpfControl && cpfControl.value ? cpfControl.value.trim() : '';
+    const email = emailControl && emailControl.value ? emailControl.value.trim() : '';
+    const phone = phoneControl && phoneControl.value ? phoneControl.value.trim() : '';
+
+    return !!(name || cpf || email || phone || this.photoPreview);
   }
 
   /**

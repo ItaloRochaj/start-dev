@@ -128,7 +128,7 @@
   </div>
 
   <!-- Modal Novo Aluno -->
-  <div class="modal-overlay" *ngIf="showNewStudentModal" (click)="closeNewStudentModal()">
+  <div class="modal-overlay" *ngIf="showNewStudentModal" (click)="closeNewStudentModal(true)">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <app-new-student (closeModal)="closeNewStudentModal()"></app-new-student>
     </div>
@@ -145,7 +145,7 @@
   </div>
 
   <!-- Modal Editar Aluno -->
-  <div class="modal-overlay" *ngIf="showEditStudentModal" (click)="closeEditStudentModal()">
+  <div class="modal-overlay" *ngIf="showEditStudentModal" (click)="closeEditStudentModal(true)">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <app-edit-student
         [studentId]="selectedStudentId"

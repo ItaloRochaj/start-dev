@@ -11,6 +11,7 @@ import { StudentsService, StudentOutputDTO } from '../../services/students.servi
 export class EditStudentComponent implements OnInit, OnChanges {
   @Input() studentId: string | null = null;
   @Output() closeModal = new EventEmitter<void>();
+  @Output() closeModalWithConfirm = new EventEmitter<boolean>();
   @Output() studentUpdated = new EventEmitter<void>();
 
   form: FormGroup;
@@ -296,6 +297,20 @@ export class EditStudentComponent implements OnInit, OnChanges {
    * Cancela e fecha o modal
    */
   onCancel(): void {
+    if (this.hasChanges) {
+      if (confirm('Descartar alterações?')) {
+        this.closeModal.emit();
+      }
+    } else {
+      this.closeModal.emit();
+    }
+  }
+
+  /**
+   * Gerencia fechamento ao clicar no backdrop/fundo do modal
+   * Se há alterações, pede confirmação
+   */
+  onBackdropClick(): void {
     if (this.hasChanges) {
       if (confirm('Descartar alterações?')) {
         this.closeModal.emit();
