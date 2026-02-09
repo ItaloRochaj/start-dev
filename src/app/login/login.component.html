@@ -8,7 +8,10 @@
       <div class="form-group">
         <label for="usuario" class="form-label">Usuário</label>
         <div class="input-wrapper">
-          <img src="assets/user.png" alt="usuário" class="input-icon">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
           <input
             type="text"
             id="usuario"
@@ -20,10 +23,7 @@
           />
         </div>
         <div *ngIf="usuario?.invalid && usuario?.touched" class="error-message">
-          <p *ngIf="usuario?.hasError('required')">Usuário é obrigatório</p>
-          <p *ngIf="usuario?.hasError('usuarioInvalido')">
-            Usuário deve ter no mínimo 8 caracteres, incluindo letras e números
-          </p>
+          {{ getUsuarioErrorMessage() }}
         </div>
       </div>
 
@@ -31,7 +31,10 @@
       <div class="form-group">
         <label for="senha" class="form-label">Senha</label>
         <div class="input-wrapper">
-          <img src="assets/cadeado.png" alt="senha" class="input-icon">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
           <input
             [type]="hidePassword ? 'password' : 'text'"
             id="senha"
@@ -60,10 +63,7 @@
           </button>
         </div>
         <div *ngIf="senha?.invalid && senha?.touched" class="error-message">
-          <p *ngIf="senha?.hasError('required')">Senha é obrigatória</p>
-          <p *ngIf="senha?.hasError('senhaInvalida')">
-            Senha deve ter no mínimo 8 caracteres, incluindo letras e números
-          </p>
+          {{ getSenhaErrorMessage() }}
         </div>
       </div>
 

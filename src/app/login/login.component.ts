@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
+import { AuthValidator } from '../validators/auth.validator';
 
 @Component({
   selector: 'app-login',
@@ -23,48 +24,26 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
-      usuario: ['', [Validators.required, this.usuarioValidator.bind(this)]],
-      senha: ['', [Validators.required, this.senhaValidator.bind(this)]]
+      usuario: [
+        '',
+        [
+          Validators.required,
+          AuthValidator.alphanumericValidator(),
+          AuthValidator.usernameLengthValidator()
+        ]
+      ],
+      senha: [
+        '',
+        [
+          Validators.required,
+          AuthValidator.alphanumericValidator(),
+          AuthValidator.passwordLengthValidator()
+        ]
+      ]
     });
   }
 
   ngOnInit(): void {}
-
-  /**
-   * Validador customizado para campo Usuário
-   * Regra: Mínimo 8 caracteres, incluindo letras e números
-   */
-  usuarioValidator(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) {
-      return null;
-    }
-
-    const value = control.value;
-    const hasMinLength = value.length >= 8;
-    const hasLetters = /[a-zA-Z]/.test(value);
-    const hasNumbers = /[0-9]/.test(value);
-
-    const valid = hasMinLength && hasLetters && hasNumbers;
-    return valid ? null : { usuarioInvalido: true };
-  }
-
-  /**
-   * Validador customizado para campo Senha
-   * Regra: Mínimo 8 caracteres, incluindo letras e números
-   */
-  senhaValidator(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) {
-      return null;
-    }
-
-    const value = control.value;
-    const hasMinLength = value.length >= 8;
-    const hasLetters = /[a-zA-Z]/.test(value);
-    const hasNumbers = /[0-9]/.test(value);
-
-    const valid = hasMinLength && hasLetters && hasNumbers;
-    return valid ? null : { senhaInvalida: true };
-  }
 
   togglePasswordVisibility(): void {
     this.hidePassword = !this.hidePassword;
@@ -119,6 +98,50 @@ export class LoginComponent implements OnInit {
 
   isButtonDisabled(): boolean {
     return this.loginForm.invalid || this.isLoading;
+  }
+
+  /**
+   * Retorna a mensagem de erro apropriada para o campo username
+   */
+  getUsuarioErrorMessage(): string {
+    const control = this.usuario;
+    if (!control || !control.errors) {
+      return '';
+    }
+
+    if (control.hasError('required')) {
+      return 'Username é obrigatório';
+    }
+    if (control.hasError('alphanumeric')) {
+      return 'Username deve conter apenas letras (sem acento) e números';
+    }
+    if (control.hasError('usernameLength')) {
+      return 'Username deve conter entre 8 e 50 caracteres';
+    }
+
+    return 'Username inválido';
+  }
+
+  /**
+   * Retorna a mensagem de erro apropriada para o campo password
+   */
+  getSenhaErrorMessage(): string {
+    const control = this.senha;
+    if (!control || !control.errors) {
+      return '';
+    }
+
+    if (control.hasError('required')) {
+      return 'Password é obrigatório';
+    }
+    if (control.hasError('alphanumeric')) {
+      return 'Password deve conter apenas letras (sem acento) e números';
+    }
+    if (control.hasError('passwordLength')) {
+      return 'Password deve conter entre 8 e 100 caracteres';
+    }
+
+    return 'Password inválido';
   }
 }
 
