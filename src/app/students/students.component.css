@@ -158,7 +158,6 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-  min-width: 1000px;
 }
 
 .students-table thead {
@@ -190,6 +189,16 @@
   padding: 16px;
   color: #555;
   font-size: 14px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Coluna de Nome - com limite de largura */
+.students-table td:nth-child(2) {
+  max-width: 250px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .students-table tr:last-child {
