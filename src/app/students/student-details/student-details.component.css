@@ -122,8 +122,25 @@
   gap: 6px;
 }
 
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  width: 20px;
+  height: 20px;
+  color: #999;
+  position: absolute;
+  left: 12px;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
 .input-field {
-  padding: 12px 14px;
+  width: 100%;
+  padding: 12px 14px 12px 44px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;

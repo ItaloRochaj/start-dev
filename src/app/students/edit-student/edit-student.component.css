@@ -234,10 +234,20 @@ form {
   align-items: center;
 }
 
+.input-icon {
+  width: 20px;
+  height: 20px;
+  color: #999;
+  position: absolute;
+  left: 12px;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
 /* Form Inputs */
 .form-input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 14px 12px 44px;
   font-size: 14px;
   border-radius: 6px;
   font-family: inherit;
