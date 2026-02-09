@@ -36,8 +36,8 @@ export interface PagedResponse {
   styleUrls: ['./students.component.css']
 })
 export class StudentsComponent implements OnInit, OnDestroy {
-  @ViewChild(NewStudentComponent) newStudentComponent!: NewStudentComponent;
-  @ViewChild(EditStudentComponent) editStudentComponent!: EditStudentComponent;
+  @ViewChild(NewStudentComponent, { static: false }) newStudentComponent!: NewStudentComponent;
+  @ViewChild(EditStudentComponent, { static: false }) editStudentComponent!: EditStudentComponent;
 
   students: Student[] = [];
   searchForm: FormGroup;
