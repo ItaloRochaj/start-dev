@@ -274,7 +274,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
   private hasNewStudentFormData(): boolean {
     if (!this.newStudentComponent) return false;
     const form = this.newStudentComponent.form;
-    
+
     const nameControl = form.get('name');
     const cpfControl = form.get('cpf');
     const emailControl = form.get('email');
@@ -284,7 +284,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
     const cpf = cpfControl && cpfControl.value ? cpfControl.value.trim() : '';
     const email = emailControl && emailControl.value ? emailControl.value.trim() : '';
     const phone = phoneControl && phoneControl.value ? phoneControl.value.trim() : '';
-    
+
     return !!(name || cpf || email || phone);
   }
 
