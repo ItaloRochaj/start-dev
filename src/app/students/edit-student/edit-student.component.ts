@@ -115,6 +115,13 @@ export class EditStudentComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Remove formatação do telefone, mantendo apenas dígitos
+   */
+  private normalizePhone(phone: string): string {
+    return phone.replace(/\D/g, '');
+  }
+
+  /**
    * Detecta mudanças no formulário
    */
   onFormChange(): void {
@@ -134,15 +141,15 @@ export class EditStudentComponent implements OnInit, OnChanges {
 
     const currentData = {
       email: emailControl ? emailControl.value : '',
-      phone: phoneControl ? phoneControl.value : '',
+      phone: phoneControl ? this.normalizePhone(phoneControl.value) : '',
       status: statusControl ? statusControl.value : 'Ativo',
       photo: this.photoPreview
     };
 
-    // Comparar cada campo
+    // Comparar cada campo (telefone normalizado sem formatação)
     return (
       currentData.email !== this.originalData.email ||
-      currentData.phone !== this.originalData.phone ||
+      this.normalizePhone(currentData.phone) !== this.normalizePhone(this.originalData.phone) ||
       currentData.status !== this.originalData.status ||
       currentData.photo !== this.originalData.photo
     );
@@ -209,7 +216,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
     }
 
     this.form.patchValue({ phone: value }, { emitEvent: false });
-    this.onFormChange();
+    this.onFormChange(); // Garantir detecção de mudanças
   }
 
   /**
@@ -311,7 +318,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
       this.photoPreview = this.originalData.photo;
       this.selectedFile = null;
       this.form.markAsPristine();
-      this.hasChanges = false;
+      this.onFormChange(); // Detectar corretamente que não há mudanças
       this.errorMessage = '';
       this.successMessage = '';
     }
