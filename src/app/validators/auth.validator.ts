@@ -9,6 +9,8 @@ export class AuthValidator {
 
   /**
    * Valida se o username contém apenas letras e números (sem acento)
+   * E exige PRESENÇA OBRIGATÓRIA de ambos (letras E números)
+   * Usa lookaheads positivos para garantir a combinação
    * @returns ValidatorFn - Função validadora do Angular
    */
   static alphanumericValidator(): ValidatorFn {
@@ -17,15 +19,19 @@ export class AuthValidator {
         return null; // Deixar Validators.required validar se está vazio
       }
 
-      const pattern = /^[a-zA-Z0-9]+$/;
+      // Regex com lookaheads positivos
+      // (?=.*[a-zA-Z]) - Lookahead: deve conter pelo menos uma letra
+      // (?=.*[0-9]) - Lookahead: deve conter pelo menos um número
+      // [a-zA-Z0-9]+ - Apenas letras e números
+      const pattern = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
       const valid = pattern.test(control.value);
 
       if (!valid) {
         return {
           alphanumeric: {
             value: control.value,
-            pattern: '^[a-zA-Z0-9]+$',
-            message: 'Deve conter apenas letras (sem acento) e números'
+            pattern: '^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$',
+            message: 'Deve conter letras e números (sem acento)'
           }
         };
       }
