@@ -107,13 +107,16 @@
       <div class="form-group">
         <label for="matricula" class="label">Matrícula
         </label>
-        <input
-          id="matricula"
-          type="text"
-          [value]="matricula"
-          disabled
-          class="input-field"
-        >
+        <div class="input-wrapper">
+          <span class="input-icon" style="font-weight: bold; font-size: 18px;">#</span>
+          <input
+            id="matricula"
+            type="text"
+            [value]="matricula"
+            disabled
+            class="input-field"
+          >
+        </div>
       </div>
 
       <!-- Status -->
