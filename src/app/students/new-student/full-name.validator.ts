@@ -2,7 +2,10 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Validador customizado para nome completo
- * Exige pelo menos 2 palavras separadas por espaço
+ * Exige:
+ * - Pelo menos 2 palavras separadas por espaço
+ * - Cada palavra com mínimo 2 caracteres
+ * - Presença obrigatória de pelo menos uma letra
  */
 export function fullNameValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -22,6 +25,12 @@ export function fullNameValidator(): ValidatorFn {
     const hasShortWord = parts.some(word => word.length < 2);
     if (hasShortWord) {
       return { fullNameShortWord: { value: control.value } };
+    }
+
+    // Validar se contém pelo menos uma letra (a-z, A-Z)
+    const hasLetter = /[a-zA-Z]/.test(name);
+    if (!hasLetter) {
+      return { fullNameNoLetters: { value: control.value } };
     }
 
     return null;

@@ -374,6 +374,9 @@ export class NewStudentComponent implements OnInit, OnDestroy {
     if (field.errors['fullNameShortWord']) {
       return 'Cada palavra do nome deve ter pelo menos 2 caracteres';
     }
+    if (field.errors['fullNameNoLetters']) {
+      return 'Informe um nome completo válido';
+    }
     if (field.errors['invalidCPF']) {
       return 'CPF inválido';
     }
