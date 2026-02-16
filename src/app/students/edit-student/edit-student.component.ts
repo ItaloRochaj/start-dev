@@ -33,7 +33,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email, validEmailValidator()]],
-      phone: ['', [Validators.required, Validators.pattern(/^(\(\d{2}\)\s\d{4,5}-\d{4}|\d{8,11})$/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^(\(\d{2}\)\s\d{4,5}-\d{4}|[1-9]\d{7,10})$/)]],
       status: ['Ativo']
     });
   }
