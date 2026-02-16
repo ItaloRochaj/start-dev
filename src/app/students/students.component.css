@@ -156,6 +156,7 @@
 
 .students-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
@@ -193,12 +194,12 @@
   overflow-wrap: break-word;
 }
 
-/* Coluna de Nome - com limite de largura */
+/* Coluna de Nome - com limite de largura e truncamento */
 .students-table td:nth-child(2) {
   max-width: 250px;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .students-table tr:last-child {

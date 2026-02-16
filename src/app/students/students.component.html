@@ -32,7 +32,7 @@
       <tbody>
         <tr *ngFor="let student of students" [ngClass]="'status-' + getStatusClass(student.status)">
           <td>{{ student.matricula }}</td>
-          <td>{{ student.name }}</td>
+          <td [title]="student.name">{{ student.name }}</td>
           <td>
             <span class="status-badge" [ngClass]="'status-' + getStatusClass(student.status)">
               {{ student.status || 'Ativo' }}
