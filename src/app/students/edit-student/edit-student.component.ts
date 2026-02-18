@@ -32,7 +32,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
     private sanitizer: DomSanitizer
   ) {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email, validEmailValidator()]],
+      email: ['', [Validators.required, validEmailValidator()]],
       phone: ['', [Validators.required, Validators.pattern(/^(\(\d{2}\)\s\d{4,5}-\d{4}|[1-9]\d{7,10})$/)]],
       status: ['Ativo']
     });
@@ -362,7 +362,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
       return 'Email inválido';
     }
     if (field.errors['invalidEmail']) {
-      return 'Email não pode conter acentos ou caracteres especiais (á, é, ã, ç, etc.)';
+      return 'Email inválido. Use Gmail, Outlook, Yahoo, iCloud ou outro provedor de email conhecido';
     }
     if (field.errors['pattern']) {
       if (fieldName === 'phone') {
