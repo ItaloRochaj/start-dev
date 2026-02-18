@@ -76,14 +76,20 @@
         <!-- Nome Completo (desabilitado) -->
         <div class="form-group">
           <label for="name" class="form-label form-label-disabled">Nome Completo</label>
-          <input
-            type="text"
-            id="name"
-            [value]="student.name"
-            disabled
-            class="form-input form-input-disabled"
-            title="Campo não pode ser editado"
-          >
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input
+              type="text"
+              id="name"
+              [value]="student.name"
+              disabled
+              class="form-input form-input-disabled"
+              title="Campo não pode ser editado"
+            >
+          </div>
         </div>
 
         <!-- Email (editável) -->
@@ -134,14 +140,17 @@
         <!-- Matrícula (desabilitado) -->
         <div class="form-group">
           <label for="matricula" class="form-label form-label-disabled">Matrícula</label>
-          <input
-            type="text"
-            id="matricula"
-            [value]="student && student.matricula ? student.matricula : '-'"
-            disabled
-            class="form-input form-input-disabled"
-            title="Campo não pode ser editado"
-          >
+          <div class="input-wrapper">
+            <span class="input-icon" style="font-weight: bold; font-size: 18px;">#</span>
+            <input
+              type="text"
+              id="matricula"
+              [value]="student && student.matricula ? student.matricula : '-'"
+              disabled
+              class="form-input form-input-disabled"
+              title="Campo não pode ser editado"
+            >
+          </div>
         </div>
 
         <!-- Status (editável) -->
