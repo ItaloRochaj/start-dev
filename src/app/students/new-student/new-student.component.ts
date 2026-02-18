@@ -37,7 +37,7 @@ export class NewStudentComponent implements OnInit, OnDestroy {
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), fullNameValidator()]],
       cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/), validCPFValidator()]],
       email: ['', [Validators.required, validEmailValidator()]],
-      phone: ['', [Validators.pattern(/^(\(\d{2}\)\s\d{4,5}-\d{4}|[1-9]\d{7,10})?$/)]]
+      phone: ['', [Validators.pattern(/^(\(\d{2}\)\s\d{4}-\d{4}|\(\d{2}\)\s\d{5}-\d{4})?$/)]]
     });
   }
 
@@ -205,6 +205,8 @@ export class NewStudentComponent implements OnInit, OnDestroy {
 
   /**
    * Formata Telefone enquanto digita
+   * Telefone fixo: (XX) XXXX-XXXX (10 dígitos)
+   * Telefone celular: (XX) XXXXX-XXXX (11 dígitos)
    */
   formatPhone(event: any): void {
     let value = event.target.value.replace(/\D/g, '');
@@ -214,9 +216,13 @@ export class NewStudentComponent implements OnInit, OnDestroy {
     if (value.length > 0) {
       if (value.length <= 2) {
         value = `(${value}`;
-      } else if (value.length <= 7) {
+      } else if (value.length <= 6) {
         value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+      } else if (value.length <= 10) {
+        // Telefone fixo: (XX) XXXX-XXXX
+        value = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}`;
       } else {
+        // Telefone celular: (XX) XXXXX-XXXX
         value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
       }
     }
@@ -385,7 +391,7 @@ export class NewStudentComponent implements OnInit, OnDestroy {
         return 'CPF deve estar no formato: 000.000.000-00';
       }
       if (fieldName === 'phone') {
-        return 'Telefone deve estar no formato: (00) 0000-0000 ou (00) 00000-0000';
+        return 'Telefone deve estar no formato: (00) 0000-0000 (fixo) ou (00) 00000-0000 (celular)';
       }
     }
     return 'Campo inválido';
