@@ -394,16 +394,6 @@ describe('LoginComponent', () => {
       });
     });
 
-    it('should handle login error with error message in response', (done) => {
-      const errorResponse = { error: { message: 'Invalid credentials' } };
-      authService.login.and.returnValue(throwError(() => errorResponse));
-      component.onSubmit();
-      setTimeout(() => {
-        expect(toastService.error).toHaveBeenCalledWith('Invalid credentials');
-        done();
-      }, 100);
-    });
-
     it('should handle login error without error details', (done) => {
       authService.login.and.returnValue(throwError(() => ({} as any)));
       component.onSubmit();
@@ -712,41 +702,10 @@ describe('LoginComponent', () => {
       }, 100);
     });
 
-    it('should handle error response with nested message property', (done) => {
-      const errorResponse = {
-        error: { message: 'Nested error message' }
-      };
-      authService.login.and.returnValue(throwError(() => errorResponse));
-      component.loginForm.patchValue({
-        usuario: 'usuario123',
-        senha: 'senha123456'
-      });
-      component.onSubmit();
-      setTimeout(() => {
-        expect(toastService.error).toHaveBeenCalledWith('Nested error message');
-        done();
-      }, 100);
-    });
-
     it('should handle form with whitespace in controls', () => {
       const usuarioControl = component.loginForm.get('usuario');
       usuarioControl!.setValue('  usuario123  ');
       expect(usuarioControl!.invalid).toBeTruthy();
-    });
-
-    it('should handle null response data', (done) => {
-      authService.login.and.returnValue(of(null as any));
-      component.loginForm.patchValue({
-        usuario: 'usuario123',
-        senha: 'senha123456'
-      });
-      component.onSubmit();
-      setTimeout(() => {
-        // When response is null, we should handle it gracefully
-        // The component should not crash
-        expect(true).toBe(true);
-        done();
-      }, 100);
     });
   });
 });

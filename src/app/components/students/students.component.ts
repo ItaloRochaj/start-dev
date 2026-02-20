@@ -155,11 +155,11 @@ export class StudentsComponent implements OnInit, OnDestroy {
   }
 
   viewStudent(id: string): void {
-    console.log('🔍 Abrindo detalhes do aluno:', id);
+    console.log('Abrindo detalhes do aluno:', id);
     this.selectedStudentId = id;
     this.showStudentDetailsModal = true;
-    console.log('📋 Modal aberto - showStudentDetailsModal:', this.showStudentDetailsModal);
-    console.log('📋 Aluno selecionado - selectedStudentId:', this.selectedStudentId);
+    console.log('Modal aberto - showStudentDetailsModal:', this.showStudentDetailsModal);
+    console.log('Aluno selecionado - selectedStudentId:', this.selectedStudentId);
   }
 
   closeStudentDetailsModal(): void {
@@ -168,7 +168,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
   }
 
   editStudent(id: string): void {
-    console.log('✏️ Abrindo edição do aluno:', id);
+    console.log('Abrindo edição do aluno:', id);
     this.selectedStudentId = id;
     console.log('Estado antes:', {
       selectedStudentId: this.selectedStudentId,
@@ -205,7 +205,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
   deleteStudent(id: string): void {
     const student = this.students.find(s => s.id === id);
     if (student) {
-      console.log('🗑️ Abrindo confirmação de exclusão:', id);
+      console.log('Abrindo confirmação de exclusão:', id);
       this.selectedStudentId = id;
       this.selectedStudentName = student.name;
       this.showDeleteConfirmationModal = true;
@@ -219,7 +219,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
   }
 
   onStudentDeleted(): void {
-    console.log('✅ Aluno deletado com sucesso');
+    console.log('Aluno deletado com sucesso');
     this.loadStudents(this.currentPage);
   }
 

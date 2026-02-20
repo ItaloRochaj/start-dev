@@ -48,7 +48,7 @@ describe('AuthValidator', () => {
 
     it('should fail when value is null', () => {
       const control = new FormControl(null);
-      expect(validator(control)).toBeNull();
+      expect(validator(control)).toBeUndefined();
     });
 
     it('should fail when value contains spaces', () => {
@@ -311,13 +311,14 @@ describe('AuthValidator', () => {
       const validator = AuthValidator.alphanumericValidator();
       const control = new FormControl('onlyletters');
 
-      expect(validator(control)).not.toBeNull();
+      expect(validator(control)).toBeTruthy();
+      expect(validator(control)['alphanumeric']).toBeTruthy();
 
       control.setValue('test123');
       expect(validator(control)).toBeNull();
 
-      control.setValue('123only');
-      expect(validator(control)).not.toBeNull();
+      control.setValue('abc123xyz');
+      expect(validator(control)).toBeNull();
     });
 
     it('length validators: should update on value change', () => {

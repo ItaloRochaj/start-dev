@@ -33,14 +33,14 @@ export class StudentDetailsComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
-    console.log('📋 Carregando detalhes do aluno ID:', this.studentId);
+    console.log('Carregando detalhes do aluno ID:', this.studentId);
 
     this.studentsService.getStudentDetail(this.studentId!).subscribe(
       (response: any) => {
         this.loading = false;
-        console.log('✅ Detalhes do aluno carregados:', response);
+        console.log('Detalhes do aluno carregados:', response);
         this.student = response.data || response;
-        console.log('📸 Foto do aluno (raw):', this.student && this.student.photo ? this.student.photo.substring(0, 50) + '...' : 'nenhuma');
+        console.log('Foto do aluno (raw):', this.student && this.student.photo ? this.student.photo.substring(0, 50) + '...' : 'nenhuma');
 
         // Processar foto se existir
         if (this.student && this.student.photo) {
@@ -49,7 +49,7 @@ export class StudentDetailsComponent implements OnInit {
       },
       (error) => {
         this.loading = false;
-        console.error('❌ Erro ao carregar detalhes:', error);
+        console.error('Erro ao carregar detalhes:', error);
         this.toastService.error(error.message || 'Erro ao carregar detalhes do aluno.');
       }
     );
@@ -100,7 +100,7 @@ export class StudentDetailsComponent implements OnInit {
   }
 
   onPhotoError(event: any): void {
-    console.warn('❌ Erro ao carregar foto, usando avatar padrão');
+    console.warn('Erro ao carregar foto, usando avatar padrão');
     event.target.src = this.getDefaultAvatar();
   }
 }

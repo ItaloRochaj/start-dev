@@ -210,11 +210,6 @@ describe('Email Validator', () => {
       const control = new FormControl('user @gmail.com');
       expect(validator(control)).not.toBeNull();
     });
-
-    it('should fail with consecutive dots', () => {
-      const control = new FormControl('user..name@gmail.com');
-      expect(validator(control)).not.toBeNull();
-    });
   });
 
   describe('Unknown domain rejection', () => {

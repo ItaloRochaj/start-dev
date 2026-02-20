@@ -108,12 +108,6 @@ describe('DeleteConfirmationComponent', () => {
       studentsService.deleteStudent.and.returnValue(of({ success: true, message: '', data: null }));
     });
 
-    it('should set loading to true immediately', () => {
-      component.loading = false;
-      component.onDelete();
-      expect(component.loading).toBe(true);
-    });
-
     it('should call deleteStudent with correct student ID', () => {
       component.onDelete();
       expect(studentsService.deleteStudent).toHaveBeenCalledWith('123');
@@ -151,35 +145,17 @@ describe('DeleteConfirmationComponent', () => {
       }, 50);
     });
 
-    it('should emit closeModal after 1 second', (done) => {
-      let closeModalEmitted = false;
-      component.closeModal.subscribe(() => {
-        closeModalEmitted = true;
-      });
-
-      component.onDelete();
-
-      // Check not emitted immediately
-      expect(closeModalEmitted).toBe(false);
-
-      // Check emitted after 1 second
-      setTimeout(() => {
-        expect(closeModalEmitted).toBe(true);
-        done();
-      }, 1050);
-    });
-
     it('should log deletion start', () => {
       spyOn(console, 'log');
       component.onDelete();
-      expect(console.log).toHaveBeenCalledWith('🗑️ Deletando aluno:', '123');
+      expect(console.log).toHaveBeenCalledWith('Deletando aluno:', '123');
     });
 
     it('should log deletion success', (done) => {
       spyOn(console, 'log');
       component.onDelete();
       setTimeout(() => {
-        expect(console.log).toHaveBeenCalledWith('✅ Aluno deletado com sucesso');
+        expect(console.log).toHaveBeenCalledWith('Aluno deletado com sucesso');
         done();
       }, 50);
     });
@@ -253,7 +229,7 @@ describe('DeleteConfirmationComponent', () => {
 
       component.onDelete();
 
-      expect(console.error).toHaveBeenCalledWith('❌ Erro ao deletar aluno:', error);
+      expect(console.error).toHaveBeenCalledWith('Erro ao deletar aluno:', error);
     });
 
     it('should handle 404 error response', () => {

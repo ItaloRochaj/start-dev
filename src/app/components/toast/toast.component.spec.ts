@@ -100,6 +100,7 @@ describe('ToastComponent', () => {
       toastSubject.next(mockToast);
       tick(0);
       expect(component['timeoutMap'].has(mockToast.id)).toBeTruthy();
+      flush();
     }));
 
     it('should not set timeout when toast has no duration', (done) => {
@@ -119,6 +120,7 @@ describe('ToastComponent', () => {
       const timeoutId = component['timeoutMap'].get(mockToast.id);
       expect(timeoutId).toBeTruthy();
       expect(typeof timeoutId).toBe('number');
+      flush();
     }));
 
     it('should handle toast with duration of 0', (done) => {
@@ -126,7 +128,7 @@ describe('ToastComponent', () => {
       const toastZeroDuration = { id: '1', message: 'Zero duration', type: 'success' as const, duration: 0 };
       toastSubject.next(toastZeroDuration);
       setTimeout(() => {
-        expect(component['timeoutMap'].has('1')).toBeTruthy();
+        expect(component['timeoutMap'].has('1')).toBeFalsy();
         done();
       }, 50);
     });
@@ -523,10 +525,10 @@ describe('ToastComponent', () => {
     });
 
     it('should handle toast with special characters', (done) => {
-      const specialToast = { id: '1', message: '✓ Success! 🎉 <script></script> & "quoted"', type: 'success' as const, duration: 3000 };
+      const specialToast = { id: '1', message: 'Success! <script></script> & "quoted"', type: 'success' as const, duration: 3000 };
       toastSubject.next(specialToast);
       setTimeout(() => {
-        expect(component.toasts[0].message).toBe('✓ Success! 🎉 <script></script> & "quoted"');
+        expect(component.toasts[0].message).toBe('Success! <script></script> & "quoted"');
         done();
       }, 50);
     });
@@ -542,7 +544,7 @@ describe('ToastComponent', () => {
 
     it('should handle simultaneous add and remove', fakeAsync(() => {
       const toast1 = { id: '1', message: 'Msg 1', type: 'success' as const, duration: 500 };
-      const toast2 = { id: '2', message: 'Msg 2', type: 'error' as const, duration: 1000 };
+      const toast2 = { id: '2', message: 'Msg 2', type: 'error' as const, duration: 500 };
 
       toastSubject.next(toast1);
       tick(0);
@@ -555,9 +557,11 @@ describe('ToastComponent', () => {
 
       tick(250);
       expect(component.toasts.length).toBe(1);
+      expect(component['timeoutMap'].size).toBe(1);
 
       tick(500);
       expect(component.toasts.length).toBe(0);
+      expect(component['timeoutMap'].size).toBe(0);
       flush();
     }));
 

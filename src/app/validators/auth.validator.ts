@@ -14,8 +14,12 @@ export class AuthValidator {
    * @returns ValidatorFn - Função validadora do Angular
    */
   static alphanumericValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      if (!control.value) {
+    return (control: AbstractControl): { [key: string]: any } | null | undefined => {
+      if (control.value === undefined || control.value === null) {
+        return undefined; // Retornar undefined para valores não definidos
+      }
+
+      if (control.value === '') {
         return null; // Deixar Validators.required validar se está vazio
       }
 

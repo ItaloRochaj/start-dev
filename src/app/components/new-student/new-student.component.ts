@@ -270,7 +270,7 @@ export class NewStudentComponent implements OnInit, OnDestroy {
     this.studentsService.createStudent(formData).subscribe(
       (response: any) => {
         this.loading = false;
-        console.log('✅ Aluno criado com sucesso:', response);
+        console.log('Aluno criado com sucesso:', response);
         this.toastService.success('Aluno cadastrado com sucesso!');
         // Aguarda um pouco para o usuário ver o toast, depois fecha
         setTimeout(() => {
@@ -279,7 +279,7 @@ export class NewStudentComponent implements OnInit, OnDestroy {
       },
       (error: any) => {
         this.loading = false;
-        console.error('❌ Erro ao criar aluno:', error);
+        console.error('Erro ao criar aluno:', error);
 
         let errorMsg = 'Erro ao cadastrar aluno. Tente novamente.';
 

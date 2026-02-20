@@ -10,7 +10,22 @@ export function validCPFValidator(): ValidatorFn {
       return null; // Deixar required validator cuidar disso
     }
 
-    const cpf = control.value.replace(/\D/g, '');
+    const value = control.value.trim();
+    let cpf: string;
+
+    // Validar formato: pode ser apenas dígitos ou no padrão 000.000.000-00
+    const validFormats = [
+      /^\d{11}$/, // Apenas dígitos
+      /^\d{3}\.\d{3}\.\d{3}-\d{2}$/ // Formato padrão 000.000.000-00
+    ];
+
+    const isValidFormat = validFormats.some(format => format.test(value));
+    if (!isValidFormat) {
+      return { invalidCPF: { value: control.value } };
+    }
+
+    // Remover caracteres não-dígitos para validação
+    cpf = value.replace(/\D/g, '');
 
     // Validar comprimento
     if (cpf.length !== 11) {

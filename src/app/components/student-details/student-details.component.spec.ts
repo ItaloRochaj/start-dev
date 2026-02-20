@@ -206,7 +206,7 @@ describe('StudentDetailsComponent', () => {
       studentsService.getStudentDetail.and.returnValue(of({ success: true, message: '', data: mockStudent }));
       component.loadStudentDetails();
       setTimeout(() => {
-        expect(console.log).toHaveBeenCalledWith('✅ Detalhes do aluno carregados:', { data: mockStudent });
+        expect(console.log).toHaveBeenCalledWith('Detalhes do aluno carregados:', { data: mockStudent });
         done();
       }, 100);
     });
@@ -254,7 +254,7 @@ describe('StudentDetailsComponent', () => {
       studentsService.getStudentDetail.and.returnValue(throwError(() => error));
       component.loadStudentDetails();
       setTimeout(() => {
-        expect(console.error).toHaveBeenCalledWith('❌ Erro ao carregar detalhes:', error);
+        expect(console.error).toHaveBeenCalledWith('Erro ao carregar detalhes:', error);
         done();
       }, 100);
     });

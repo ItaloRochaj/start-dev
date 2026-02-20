@@ -63,7 +63,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
       (response: any) => {
         this.loading = false;
         this.student = response.data || response;
-        console.log(' Aluno carregado para edição:', this.student);
+        console.log('Aluno carregado para edição:', this.student);
 
         // Preparar formulário com dados do aluno
         if (this.student) {
@@ -261,7 +261,7 @@ export class EditStudentComponent implements OnInit, OnChanges {
     this.studentsService.updateStudent(String(this.student.id), updateData).subscribe(
       (response: any) => {
         this.submitting = false;
-        console.log(' Aluno atualizado com sucesso:', response);
+        console.log('Aluno atualizado com sucesso:', response);
         this.successMessage = 'Aluno atualizado com sucesso!';
 
         // Atualizar dados originais

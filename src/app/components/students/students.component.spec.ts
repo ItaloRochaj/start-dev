@@ -832,6 +832,7 @@ describe('StudentsComponent', () => {
       mockForm.get.and.returnValue({ value: '' });
       const mockComponent = { form: mockForm } as any;
       component.editStudentComponent = mockComponent;
+      studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
 
       component.closeEditStudentModal();
 
@@ -905,6 +906,7 @@ describe('StudentsComponent', () => {
 
     it('should reset form on clear search', () => {
       component.searchForm.patchValue({ search: 'test' });
+      studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
       component.clearSearch();
 
       expect(component.searchForm.get('search')!.value).toBeNull();
@@ -951,6 +953,7 @@ describe('StudentsComponent', () => {
   describe('Reactive Search Setup', () => {
     it('should trigger search on form control value change', fakeAsync(() => {
       studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
+      fixture.detectChanges();
 
       const searchControl = component.searchForm.get('search');
       searchControl!.setValue('João');
@@ -963,6 +966,7 @@ describe('StudentsComponent', () => {
     it('should reset current page on new search', fakeAsync(() => {
       component.currentPage = 5;
       studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
+      fixture.detectChanges();
 
       const searchControl = component.searchForm.get('search');
       searchControl!.setValue('search term');
@@ -975,6 +979,7 @@ describe('StudentsComponent', () => {
     it('should handle empty search value', fakeAsync(() => {
       component.searchTerm = 'previous';
       studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
+      fixture.detectChanges();
 
       const searchControl = component.searchForm.get('search');
       searchControl!.setValue('');
@@ -1049,12 +1054,12 @@ describe('StudentsComponent', () => {
       const mockForm = jasmine.createSpyObj('FormGroup', ['get']);
       mockForm.pristine = false;
       mockForm.get.and.returnValue({ value: 'Test' });
-      const mockComponent = { form: mockForm } as any;
+      const mockComponent = { form: mockForm, hasChanges: true } as any;
       component.editStudentComponent = mockComponent;
       spyOn(window, 'confirm').and.returnValue(true);
       studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
 
-      component.closeEditStudentModal();
+      component.closeEditStudentModal(true);
 
       expect(window.confirm).toHaveBeenCalledWith('Descartar alterações?');
       expect(component.showEditStudentModal).toBeFalsy();
@@ -1065,11 +1070,12 @@ describe('StudentsComponent', () => {
       const mockForm = jasmine.createSpyObj('FormGroup', ['get']);
       mockForm.pristine = false;
       mockForm.get.and.returnValue({ value: 'Test' });
-      const mockComponent = { form: mockForm } as any;
+      const mockComponent = { form: mockForm, hasChanges: true } as any;
       component.editStudentComponent = mockComponent;
       spyOn(window, 'confirm').and.returnValue(false);
+      studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
 
-      component.closeEditStudentModal();
+      component.closeEditStudentModal(true);
 
       expect(component.showEditStudentModal).toBeTruthy();
     });
@@ -1080,13 +1086,14 @@ describe('StudentsComponent', () => {
       component.showNewStudentModal = true;
       const mockForm = jasmine.createSpyObj('FormGroup', ['get']);
       mockForm.pristine = false;
+      mockForm.dirty = true;
       mockForm.get.and.returnValue({ value: 'Test' });
       const mockComponent = { form: mockForm } as any;
       component.newStudentComponent = mockComponent;
       spyOn(window, 'confirm').and.returnValue(true);
       studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
 
-      component.closeNewStudentModal();
+      component.closeNewStudentModal(true);
 
       expect(window.confirm).toHaveBeenCalledWith('Descartar alterações?');
       expect(component.showNewStudentModal).toBeFalsy();
@@ -1096,6 +1103,7 @@ describe('StudentsComponent', () => {
       component.showNewStudentModal = true;
       const mockForm = jasmine.createSpyObj('FormGroup', ['get']);
       mockForm.pristine = false;
+      mockForm.dirty = true;
       mockForm.get.and.callFake((fieldName: string) => {
         if (fieldName === 'name') return { value: 'João Silva' };
         return { value: '' };
@@ -1103,8 +1111,9 @@ describe('StudentsComponent', () => {
       const mockComponent = { form: mockForm } as any;
       component.newStudentComponent = mockComponent;
       spyOn(window, 'confirm').and.returnValue(false);
+      studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
 
-      component.closeNewStudentModal();
+      component.closeNewStudentModal(true);
 
       expect(component.showNewStudentModal).toBeTruthy();
     });
@@ -1113,12 +1122,14 @@ describe('StudentsComponent', () => {
       component.showNewStudentModal = true;
       const mockForm = jasmine.createSpyObj('FormGroup', ['get']);
       mockForm.pristine = true;
+      mockForm.dirty = false;
       mockForm.get.and.returnValue({ value: '' });
       const mockComponent = { form: mockForm } as any;
       component.newStudentComponent = mockComponent;
       spyOn(window, 'confirm');
+      studentsService.getStudents.and.returnValue(of({ success: true, message: '', data: mockPagedResponse.data }));
 
-      component.closeNewStudentModal();
+      component.closeNewStudentModal(true);
 
       expect(component.showNewStudentModal).toBeFalsy();
       expect(window.confirm).not.toHaveBeenCalled();
@@ -1460,7 +1471,150 @@ describe('StudentsComponent', () => {
       expect(component.showNewStudentModal).toBeTruthy();
     });
   });
+
+  describe('Branch Coverage - closeNewStudentModal with form data', () => {
+    it('should keep new student modal open when confirm is false with form data', () => {
+      component.showNewStudentModal = true;
+      const mockForm = jasmine.createSpyObj('FormGroup', ['get']);
+      mockForm.pristine = false;
+      mockForm.get.and.callFake((fieldName: string) => {
+        const values: { [key: string]: any } = {
+          name: { value: 'João Silva' },
+          cpf: { value: '' },
+          email: { value: '' },
+          phone: { value: '' }
+        };
+        return values[fieldName] || { value: '' };
+      });
+      const mockComponent = { form: mockForm } as any;
+      component.newStudentComponent = mockComponent;
+      spyOn(window, 'confirm').and.returnValue(false);
+      component.closeNewStudentModal(true);
+      expect(component.showNewStudentModal).toBeTruthy();
+    });
+  });
+
+  describe('Branch Coverage - closeEditStudentModal with null component', () => {
+    it('should close edit modal when editStudentComponent is undefined', () => {
+      component.showEditStudentModal = true;
+      component.editStudentComponent = undefined as any;
+      studentsService.getStudents.and.returnValue(of(mockPagedResponse));
+      component.closeEditStudentModal(true);
+      expect(component.showEditStudentModal).toBeFalsy();
+    });
+  });
+
+  describe('Branch Coverage - getPageNumbers edge cases', () => {
+    it('should handle page numbers when endPage minus startPage is less than maxPages', () => {
+      component.currentPage = 8;
+      component.totalPages = 10;
+      const pages = component.getPageNumbers();
+      expect(pages.length).toBeLessThanOrEqual(5);
+      expect(pages[pages.length - 1]).toBe(9);
+    });
+
+    it('should handle single page scenario', () => {
+      component.currentPage = 0;
+      component.totalPages = 1;
+      const pages = component.getPageNumbers();
+      expect(pages).toEqual([0]);
+    });
+  });
+
+  describe('Branch Coverage - onSearch with empty search', () => {
+    it('should handle onSearch when searchForm control is null', () => {
+      spyOn(component.searchForm, 'get').and.returnValue(null);
+      studentsService.getStudents.and.returnValue(of(mockPagedResponse));
+      component.onSearch();
+      expect(component.searchTerm).toBe('');
+    });
+  });
+  describe('Branch Coverage - Search Type Detection', () => {
+    beforeEach(() => {
+      studentsService.getStudents.and.returnValue(of(mockPagedResponse));
+    });
+
+    it('should detect numeric-only input as matricula', () => {
+      component.searchForm.patchValue({ search: '2024001' });
+      component.onSearch();
+      expect(component.searchType).toBe('matricula');
+    });
+
+    it('should detect text input as name', () => {
+      component.searchForm.patchValue({ search: 'João Silva' });
+      component.onSearch();
+      expect(component.searchType).toBe('name');
+    });
+
+    it('should detect mixed alphanumeric as name', () => {
+      component.searchForm.patchValue({ search: 'MAT001' });
+      component.onSearch();
+      expect(component.searchType).toBe('name');
+    });
+  });
+
+  describe('Branch Coverage - Pagination Boundaries', () => {
+    beforeEach(() => {
+      component.totalPages = 5;
+      studentsService.getStudents.and.returnValue(of(mockPagedResponse));
+    });
+
+    it('should not navigate when goToPreviousPage on first page', () => {
+      component.currentPage = 0;
+      studentsService.getStudents.calls.reset();
+      component.goToPreviousPage();
+      expect(studentsService.getStudents).not.toHaveBeenCalled();
+    });
+
+    it('should not navigate when goToNextPage on last page', () => {
+      component.currentPage = 4;
+      studentsService.getStudents.calls.reset();
+      component.goToNextPage();
+      expect(studentsService.getStudents).not.toHaveBeenCalled();
+    });
+
+    it('should not navigate to page beyond totalPages', () => {
+      studentsService.getStudents.calls.reset();
+      component.goToPage(10);
+      expect(studentsService.getStudents).not.toHaveBeenCalled();
+    });
+
+    it('should not navigate to negative page', () => {
+      studentsService.getStudents.calls.reset();
+      component.goToPage(-1);
+      expect(studentsService.getStudents).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Branch Coverage - Delete Student Edge Cases', () => {
+    it('should not open delete modal when student not found', () => {
+      component.students = mockStudents;
+      component.deleteStudent('non-existent-id');
+      expect(component.showDeleteConfirmationModal).toBeFalsy();
+      expect(component.selectedStudentId).toBeNull();
+    });
+  });
+
+  describe('Branch Coverage - Status Class with Different Types', () => {
+    it('should return active for null status', () => {
+      expect(component.getStatusClass(null as any)).toBe('active');
+    });
+
+    it('should return active for undefined status', () => {
+      expect(component.getStatusClass(undefined as any)).toBe('active');
+    });
+
+    it('should return active for numeric status', () => {
+      expect(component.getStatusClass(123 as any)).toBe('active');
+    });
+
+    it('should return inactive for Inativo lowercase', () => {
+      expect(component.getStatusClass('inativo')).toBe('inactive');
+    });
+
+    it('should return inactive for INATIVO uppercase', () => {
+      expect(component.getStatusClass('INATIVO')).toBe('inactive');
+    });
+  });
+
 });
-
-
-

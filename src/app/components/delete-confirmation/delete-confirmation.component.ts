@@ -37,12 +37,12 @@ export class DeleteConfirmationComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    console.log('🗑️ Deletando aluno:', this.studentId);
+    console.log('Deletando aluno:', this.studentId);
 
     this.studentsService.deleteStudent(this.studentId).subscribe(
       () => {
         this.loading = false;
-        console.log('✅ Aluno deletado com sucesso');
+        console.log('Aluno deletado com sucesso');
 
         // Mostrar toast de sucesso
         this.toastService.success('Aluno excluído com sucesso!');
@@ -57,7 +57,7 @@ export class DeleteConfirmationComponent {
       },
       (error) => {
         this.loading = false;
-        console.error('❌ Erro ao deletar aluno:', error);
+        console.error('Erro ao deletar aluno:', error);
         this.toastService.error('Erro ao excluir aluno. Tente novamente.');
       }
     );
