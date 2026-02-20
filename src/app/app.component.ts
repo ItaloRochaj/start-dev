@@ -20,8 +20,11 @@ export class AppComponent {
   }
 
   logout(): void {
-    this.authService.logout();
-    this.isAuthenticated = false;
-    this.router.navigate(['/login']);
+    try {
+      this.authService.logout();
+    } finally {
+      this.isAuthenticated = false;
+      this.router.navigate(['/login']);
+    }
   }
 }
