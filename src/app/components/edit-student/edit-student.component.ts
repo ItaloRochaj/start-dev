@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { StudentsService, StudentOutputDTO } from '../../services/students.service';
-import { validEmailValidator } from '../new-student/email.validator';
+import { validEmailValidator } from '../../validators/email.validator';
 
 @Component({
   selector: 'app-edit-student',
