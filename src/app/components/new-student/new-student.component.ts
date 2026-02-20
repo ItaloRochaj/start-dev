@@ -4,9 +4,9 @@ import { StudentsService } from '../../services/students.service';
 import { ToastService } from '../../services/toast.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { fullNameValidator } from './full-name.validator';
-import { validCPFValidator } from './cpf.validator';
-import { validEmailValidator } from './email.validator';
+import { fullNameValidator } from '../../validators/full-name.validator';
+import { validCPFValidator } from '../../validators/cpf.validator';
+import { validEmailValidator } from '../../validators/email.validator';
 
 @Component({
   selector: 'app-new-student',
