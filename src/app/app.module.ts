@@ -5,12 +5,12 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import { StudentsComponent } from './students/students.component';
-import { NewStudentComponent } from './students/new-student/new-student.component';
-import { StudentDetailsComponent } from './students/student-details/student-details.component';
-import { EditStudentComponent } from './students/edit-student/edit-student.component';
-import { DeleteConfirmationComponent } from './students/delete-confirmation/delete-confirmation.component';
+import { LoginComponent } from './components/login/login.component';
+import { StudentsComponent } from './components/students/students.component';
+import { NewStudentComponent } from './components/new-student/new-student.component';
+import { StudentDetailsComponent } from './components/student-details/student-details.component';
+import { EditStudentComponent } from './components/edit-student/edit-student.component';
+import { DeleteConfirmationComponent } from './components/delete-confirmation/delete-confirmation.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { ToastService } from './services/toast.service';
 import { AppRoutingModule } from './app-routing.module';

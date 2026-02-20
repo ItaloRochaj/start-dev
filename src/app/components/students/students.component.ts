@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { StudentsService } from '../services/students.service';
-import { AuthService } from '../services/auth.service';
+import { StudentsService } from '../../services/students.service';
+import { AuthService } from '../../services/auth.service';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { NewStudentComponent } from './new-student/new-student.component';
-import { EditStudentComponent } from './edit-student/edit-student.component';
+import { NewStudentComponent } from '../new-student/new-student.component';
+import { EditStudentComponent } from '../edit-student/edit-student.component';
 
 export interface Student {
   id: string;

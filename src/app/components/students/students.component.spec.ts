@@ -4,7 +4,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
 
 import { StudentsComponent } from './students.component';
-import { StudentsService } from '../services/students.service';
+import { StudentsService } from '../../services/students.service';
 
 describe('StudentsComponent', () => {
   let component: StudentsComponent;
